@@ -1,25 +1,37 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Models;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
-public function up(): void
-{
-    Schema::table('users', function (Blueprint $table) {
-        $table->string('role')->default('editor')->after('email');
-    });
-}
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-public function down(): void
+class User extends Authenticatable
 {
-    Schema::table('users', function (Blueprint $table) {
-        $table->dropColumn('role');
-    });
+    use HasFactory, Notifiable;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
 }
-};

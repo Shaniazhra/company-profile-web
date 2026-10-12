@@ -1,17 +1,20 @@
 <?php
 
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PipelineController;
-use App\Http\Middleware\SetLocale;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => redirect()->route('home', ['locale' => 'id']));
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::prefix('{locale}')
-    ->where(['locale' => 'id|en'])
-    ->middleware(SetLocale::class)
-    ->group(function () {
-        Route::get('/', [HomeController::class, 'index'])->name('home');
-        Route::view('/tentang-kami', 'about')->name('about');
-        Route::get('/alur-produksi', [PipelineController::class, 'index'])->name('pipeline');
-    });
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

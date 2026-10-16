@@ -15,9 +15,19 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Bagikan pengaturan website ke semua halaman publik sebagai $site.
-        View::composer(['layouts.*', 'partials.*', 'home', 'about', 'pipeline'], function ($view) {
-            $view->with('site', SiteSetting::current());
-        });
+        $site = null;
+
+        View::composer(
+            ['layouts.site', 'partials.*', 'welcome', 'about', 'pipeline', 'contact'],
+            function ($view) use (&$site) {
+                $site ??= SiteSetting::first() ?? new SiteSetting;
+
+                $view->with([
+                    'site'  => $site,
+                    'loc'   => app()->getLocale(),
+                    'brand' => $site->site_name ?: 'Dream Ratio',
+                ]);
+            }
+        );
     }
 }

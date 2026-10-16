@@ -1,21 +1,35 @@
+@php
+    $loc   = app()->getLocale();
+    $home  = Route::has('home') ? route('home', ['locale' => $loc]) : url('/');
+    $brand = ($site->site_name ?? null) ?: 'Dream Ratio';
+
+    $navItems = [
+        ['label' => __('Beranda'), 'href' => $home, 'active' => request()->routeIs('home')],
+    ];
+    if (Route::has('about')) {
+        $navItems[] = ['label' => __('Tentang Kami'), 'href' => route('about', ['locale' => $loc]), 'active' => request()->routeIs('about')];
+    }
+    if (Route::has('pipeline')) {
+        $navItems[] = ['label' => __('Alur Produksi'), 'href' => route('pipeline', ['locale' => $loc]), 'active' => request()->routeIs('pipeline')];
+    }
+    $navItems[] = ['label' => __('Tim'), 'href' => $home.'#tim', 'active' => false];
+    $navItems[] = ['label' => __('Proyek'), 'href' => $home.'#proyek', 'active' => false];
+@endphp
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ str_replace('_', '-', $loc) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', $site->site_name) | {{ $site->site_name }}</title>
-
-    @if ($site->faviconUrl())
-        <link rel="icon" href="{{ $site->faviconUrl() }}">
-    @endif
+    <title>@yield('title', __('Beranda')) — {{ $brand }}</title>
+    <meta name="description" content="@yield('description', 'Dream Ratio — We Animate Dreams')">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 
+    @vite(['resources/css/theme.css', 'resources/js/app.js'])
     <script>document.documentElement.classList.add('js');</script>
-
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('head')
 </head>
 <body>
     @include('partials.navbar')
@@ -29,18 +43,23 @@
     <script>
         (function () {
             var nav = document.getElementById('navbar');
-            var toggle = document.getElementById('nav-toggle');
-            var links = document.getElementById('nav-links');
-
-            function onScroll() { nav.classList.toggle('is-scrolled', window.scrollY > 8); }
+            var onScroll = function () { nav.classList.toggle('is-scrolled', window.scrollY > 12); };
             onScroll();
             window.addEventListener('scroll', onScroll, { passive: true });
 
+            var toggle = document.getElementById('nav-toggle');
+            var links = document.getElementById('nav-links');
+            var close = function () {
+                links.classList.remove('is-open');
+                toggle.classList.remove('is-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            };
             toggle.addEventListener('click', function () {
                 var open = links.classList.toggle('is-open');
                 toggle.classList.toggle('is-open', open);
                 toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
             });
+            links.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', close); });
 
             var items = document.querySelectorAll('[data-reveal]');
             if (!('IntersectionObserver' in window)) {
@@ -53,10 +72,11 @@
                 });
             }, { threshold: 0.12 });
             items.forEach(function (el, i) {
-                el.style.transitionDelay = (i % 4) * 70 + 'ms';
+                el.style.transitionDelay = (i % 4) * 80 + 'ms';
                 io.observe(el);
             });
         })();
     </script>
+    @stack('scripts')
 </body>
 </html>

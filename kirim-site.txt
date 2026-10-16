@@ -1,0 +1,135 @@
+﻿
+===== app/Http/Controllers/Admin/SiteSettingController.php =====
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\SiteSetting;
+use App\Support\AdminForm;
+use Illuminate\Http\Request;
+
+class SiteSettingController extends Controller
+{
+    /** Harus sama dengan $translatable di model SiteSetting. */
+    private array $translatable = ['tagline', 'heart_statement', 'impact_statement', 'about_text'];
+
+    public function edit()
+    {
+        return view('admin.site.edit', [
+            'site' => SiteSetting::first() ?? new SiteSetting,
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        $data = $request->validate([
+            'site_name' => ['required', 'string', 'max:120'],
+            'logo' => AdminForm::imageRules(),
+            'hero_image' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
+            ...AdminForm::translationRules('tagline', max: 200),
+            ...AdminForm::translationRules('heart_statement'),
+            ...AdminForm::translationRules('impact_statement'),
+            ...AdminForm::translationRules('about_text', max: 5000),
+        ]);
+
+        $site = SiteSetting::first() ?? new SiteSetting;
+
+        $site->site_name = $data['site_name'];
+
+        foreach ($this->translatable as $field) {
+            $site->setTranslations($field, AdminForm::clean($data[$field] ?? []));
+        }
+
+        $site->logo = AdminForm::syncImage($request, $site->logo, 'logo', 'site');
+        $site->hero_image = AdminForm::syncImage($request, $site->hero_image, 'hero_image', 'site');
+        $site->save();
+
+        return back()->with('status', 'Pengaturan situs disimpan.');
+    }
+}
+
+===== app/Models/SiteSetting.php =====
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
+
+#[Fillable([
+    'site_name', 'logo', 'favicon',
+    'tagline', 'heart_statement', 'impact_statement', 'about_text',
+    'email', 'instagram_url', 'linkedin_url',
+])]
+class SiteSetting extends Model
+{
+    use HasTranslations;
+
+    public array $translatable = ['tagline', 'heart_statement', 'impact_statement', 'about_text'];
+
+    private static ?self $instance = null;
+
+    /** Tabel ini hanya punya satu baris. Kalau belum ada, dibuat otomatis. */
+    public static function current(): self
+    {
+        return self::$instance ??= static::query()->first()
+            ?? static::create(['site_name' => 'Dream Ratio']);
+    }
+
+    public function logoUrl(): ?string
+    {
+        return $this->logo ? asset('storage/' . $this->logo) : null;
+    }
+
+    public function faviconUrl(): ?string
+    {
+        return $this->favicon ? asset('storage/' . $this->favicon) : null;
+    }
+} 
+
+===== resources/views/components/admin/image-field.blade.php =====
+@props(['name', 'label', 'path' => null, 'help' => null, 'dark' => false])
+
+<fieldset class="space-y-3">
+    <legend class="font-semibold text-gray-700">{{ $label }}</legend>
+
+    @if ($path)
+        <div class="flex items-center gap-4 rounded-md p-4 {{ $dark ? 'bg-gray-900' : 'bg-gray-100' }}">
+            <img src="{{ asset('storage/'.$path) }}" alt="{{ $label }}" class="h-24 w-auto object-contain">
+            <label class="flex items-center gap-2 text-sm {{ $dark ? 'text-gray-200' : 'text-gray-700' }}">
+                <input type="checkbox" name="remove_{{ $name }}" value="1" class="rounded border-gray-300">
+                Hapus gambar ini
+            </label>
+        </div>
+    @endif
+
+    <div>
+        <input id="{{ $name }}" type="file" name="{{ $name }}" accept="image/png,image/jpeg,image/webp"
+               class="mt-1 block w-full text-sm text-gray-700">
+        <p class="mt-1 text-xs text-gray-500">{{ $help ?? 'PNG, JPG, atau WebP, maks 2 MB.' }}</p>
+        <x-input-error :messages="$errors->get($name)" class="mt-1" />
+    </div>
+</fieldset>
+
+===== resources/views/components/admin/translatable.blade.php =====
+@props(['name', 'label', 'model' => null, 'rows' => 1])
+
+<fieldset class="space-y-3">
+    <legend class="font-semibold text-gray-700">{{ $label }}</legend>
+
+    @foreach (\App\Support\AdminForm::LOCALES as $code => $language)
+        <div>
+            <x-input-label :for="$name.'_'.$code" :value="$language" />
+            <textarea id="{{ $name }}_{{ $code }}" name="{{ $name }}[{{ $code }}]" rows="{{ $rows }}"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old("$name.$code", $model?->getTranslation($name, $code, false)) }}</textarea>
+            <x-input-error :messages="$errors->get($name.'.'.$code)" class="mt-1" />
+        </div>
+    @endforeach
+</fieldset>
+
+===== resources/views/components/admin/flash.blade.php =====
+@if (session('status'))
+    <div class="mb-4 rounded-md bg-green-50 p-4 text-green-800">{{ session('status') }}</div>
+@endif

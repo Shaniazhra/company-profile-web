@@ -18,6 +18,12 @@
                 </div>
             </div>
 
+            @if (Auth::user()->is_admin)
+    <x-nav-link :href="route('admin.site.edit')" :active="request()->routeIs('admin.*')">
+        {{ __('Kelola Situs') }}
+    </x-nav-link>
+@endif
+
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">

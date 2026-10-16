@@ -445,6 +445,37 @@
     ];
 @endphp
 
+@php
+    // Content from the admin panel. If a table is empty, the defaults above stay in place.
+    $dbServices = \App\Models\Service::active()->ordered()->get();
+    if ($dbServices->isNotEmpty()) {
+        $services = $dbServices->map(fn ($s) => ['title' => $s->title, 'text' => $s->summary, 'url' => route('services.show', $s->id)])->all();
+    }
+
+    $dbStages = \App\Models\ProcessStage::active()->ordered()->pluck('title')->all();
+    if ($dbStages) {
+        $ours = $dbStages;
+    }
+
+    $dbCrew = \App\Models\CrewMember::active()->ordered()->get();
+    if ($dbCrew->isNotEmpty()) {
+        $team = $dbCrew->map(fn ($m) => ['name' => $m->name, 'role' => $m->role, 'photo' => '', 'photo_url' => $m->photo_url, 'points' => $m->creditList()])->all();
+    }
+
+    $dbFaqs = \App\Models\Faq::active()->ordered()->get();
+    if ($dbFaqs->isNotEmpty()) {
+        $faqs = $dbFaqs->map(fn ($f) => ['q' => $f->question, 'a' => $f->answer])->all();
+    }
+
+    $dbProjects = \App\Models\Project::published()->ordered()->get();
+    if ($dbProjects->isNotEmpty()) {
+        $p0 = $dbProjects->first();
+        $featured    = ['title' => $p0->title, 'tag' => $p0->tag, 'synopsis' => $p0->synopsis, 'url' => route('projects.show', $p0->slug)];
+        $featuredImg = $p0->image_url;
+        $others      = $dbProjects->slice(1)->all();
+    }
+@endphp
+
 <div class="home">
 
     <section class="home-hero {{ $heroImg ? 'has-image' : '' }}">
@@ -470,7 +501,7 @@
                         <article class="svc-card" data-reveal>
                             <h3>{{ $s['title'] }}</h3>
                             <p>{{ $s['text'] }}</p>
-                            <a href="#contact" class="btn btn-outline btn-sm">{{ __('Ask about this service') }}</a>
+                            <a href="{{ $s['url'] ?? '#contact' }}" class="btn btn-outline btn-sm">{{ isset($s['url']) ? __('Learn more') : __('Ask about this service') }}</a>
                         </article>
                     @endforeach
                 </div>
@@ -564,9 +595,9 @@
                     <p class="pj-tag">{{ $featured['tag'] }}</p>
                     <p class="pj-synopsis">{{ !empty($featured['synopsis']) ? $featured['synopsis'] : __('Synopsis coming soon') }}</p>
 
-                    @if (count($others) && $projectsRoute)
+                    @if ($projectsRoute)
                         <div class="btn-row">
-                            <a href="{{ $projectsUrl }}" class="btn btn-primary">{{ __('View other projects') }} {!! $arrow !!}</a>
+                            @if (! empty($featured['url']))<a href="{{ $featured['url'] }}" class="btn btn-primary">{{ __('View project') }}</a>@endif @if (count($others))<a href="{{ $projectsUrl }}" class="btn btn-outline">{{ __('View other projects') }} {!! $arrow !!}</a>@endif
                         </div>
                     @endif
                 </div>
@@ -589,7 +620,7 @@
                         <div class="crew-card">
                             <span class="crew-mark" aria-hidden="true">{{ $brand }}</span>
                             <div class="crew-photo">
-                                @if ($photo = $teamPhoto($p['photo']))
+                                @if ($photo = ($p['photo_url'] ?? null) ?: (($p['photo'] ?? '') ? $teamPhoto($p['photo']) : null))
                                     <img src="{{ $photo }}" alt="{{ $p['name'] }}" loading="lazy">
                                 @else
                                     <span aria-hidden="true">{{ collect(explode(' ', $p['name']))->map(fn ($w) => mb_substr($w, 0, 1))->take(2)->implode('') }}</span>

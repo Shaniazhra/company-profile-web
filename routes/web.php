@@ -20,6 +20,17 @@ Route::prefix('{locale}')
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::view('/about', 'about')->name('about');
 
+        $pages = \App\Http\Controllers\SitePagesController::class;
+        Route::get('/services', [$pages, 'services'])->name('services.index');
+        Route::get('/services/{service}', [$pages, 'service'])->name('services.show');
+        Route::get('/projects', [$pages, 'projects'])->name('projects.index');
+        Route::get('/projects/{project}', [$pages, 'project'])->name('projects.show');
+        Route::get('/process', [$pages, 'process'])->name('process');
+        Route::get('/team', [$pages, 'team'])->name('team');
+        Route::get('/faq', [$pages, 'faq'])->name('faq');
+        Route::get('/contact', [$pages, 'contact'])->name('contact');
+        Route::post('/contact', [$pages, 'contactStore'])->middleware('throttle:5,1')->name('contact.store');
+
         // Aktifkan setelah PipelineController dibuat:
         // Route::get('/alur-produksi', [\App\Http\Controllers\PipelineController::class, 'index'])->name('pipeline');
     });
@@ -58,6 +69,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('projects/{project}/publish', [ProjectController::class, 'togglePublish'])->name('projects.publish');
     Route::resource('clients', ClientController::class)->except('show');
     Route::patch('clients/{client}/move', [ClientController::class, 'move'])->name('clients.move');
+
+    foreach ([
+        'team' => \App\Http\Controllers\Admin\CrewMemberController::class,
+        'faqs' => \App\Http\Controllers\Admin\FaqController::class,
+        'process' => \App\Http\Controllers\Admin\ProcessStageController::class,
+        'contacts' => \App\Http\Controllers\Admin\ContactPersonController::class,
+    ] as $name => $controller) {
+        Route::resource($name, $controller)->except('show')->parameters([$name => 'item']);
+        Route::patch($name.'/{item}/move', [$controller, 'move'])->name($name.'.move');
+    }
+
+    Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class)->only(['index', 'show', 'destroy'])->parameters(['inquiries' => 'item']);
+    Route::patch('inquiries/{item}/read', [\App\Http\Controllers\Admin\InquiryController::class, 'toggleRead'])->name('inquiries.read');
 });
 
 require __DIR__.'/auth.php';

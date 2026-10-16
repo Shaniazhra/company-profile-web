@@ -1,13 +1,13 @@
 @extends('layouts.site')
 
-@section('title', __('Tentang Kami'))
+@section('title', __('About Us'))
 
 @section('content')
 
     <section class="page-hero">
         <div class="container" data-reveal>
             <span class="eyebrow">{{ __('Siapa Kami') }}</span>
-            <h1>{{ __('Tentang Kami') }}</h1>
+            <h1>{{ __('About Us') }}</h1>
             @if ($site->about_text)
                 <p class="lead">{{ $site->about_text }}</p>
             @endif

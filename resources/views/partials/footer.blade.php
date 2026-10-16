@@ -149,7 +149,7 @@
 @endonce
 
 <footer class="sf">
-    <section class="sf-top" id="kontak" aria-labelledby="sf-cta-title">
+    <section class="sf-top" id="contact" aria-labelledby="sf-cta-title">
         @if ($ctaImg)
             <div class="sf-visual {{ $ctaCutout ? 'sf-visual--cutout' : '' }}" aria-hidden="true">
                 <img src="{{ $ctaImg }}" alt="" loading="lazy">
@@ -204,7 +204,7 @@
             <div>
                 <h3 class="sf-title">{{ __('Contact') }}</h3>
                 <div class="sf-links">
-                    <a href="{{ $home }}#kontak">{{ __('Contact us') }}</a>
+                    <a href="{{ $home }}#contact">{{ __('Contact us') }}</a>
                     <a href="{{ $instagramUrl }}" target="_blank" rel="noopener">Instagram</a>
                     <a href="{{ $linkedinUrl }}" target="_blank" rel="noopener">LinkedIn</a>
                 </div>

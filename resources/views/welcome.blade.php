@@ -409,9 +409,9 @@
     $others       = array_slice($projects, 1);
     $featuredImg  = $featured ? $img($featured['img']) : null;
 
-    // Until the projects page exists, links go to /{locale}/proyek. Once the 'projects' route exists, it is used automatically.
+    // Until the projects page exists, links go to /{locale}/projects. Once the 'projects' route exists, it is used automatically.
     $projectsRoute = collect(['projects', 'projects.index'])->first(fn ($name) => Route::has($name));
-    $projectsUrl   = $projectsRoute ? route($projectsRoute, ['locale' => $loc]) : url($loc.'/proyek');
+    $projectsUrl   = $projectsRoute ? route($projectsRoute, ['locale' => $loc]) : url($loc.'/projects');
 
     // Production stages in the Dream Ratio pipeline
     $ours = ['Concept', 'Layout', 'Animating', 'Lighting', 'Render', 'Final Editing'];
@@ -456,13 +456,13 @@
             <h1 class="home-title">{{ $title }}</h1>
             <p class="lead">{{ $heart }}</p>
             <div class="btn-row">
-                <a href="#kontak" class="btn btn-primary">{{ __('Contact us') }}</a>
-                <a href="#proyek" class="btn btn-ghost">{{ __('View projects') }}</a>
+                <a href="#contact" class="btn btn-primary">{{ __('Contact us') }}</a>
+                <a href="#projects" class="btn btn-ghost">{{ __('View projects') }}</a>
             </div>
         </div>
     </section>
 
-    <section class="sec sec--cards tone-paper" id="layanan" aria-label="{{ __('Services') }}">
+    <section class="sec sec--cards tone-paper" id="services" aria-label="{{ __('Services') }}">
         <div class="container">
             <div class="svc-wrap">
                 <div class="svc">
@@ -470,7 +470,7 @@
                         <article class="svc-card" data-reveal>
                             <h3>{{ $s['title'] }}</h3>
                             <p>{{ $s['text'] }}</p>
-                            <a href="#kontak" class="btn btn-outline btn-sm">{{ __('Ask about this service') }}</a>
+                            <a href="#contact" class="btn btn-outline btn-sm">{{ __('Ask about this service') }}</a>
                         </article>
                     @endforeach
                 </div>
@@ -478,7 +478,7 @@
         </div>
     </section>
 
-    <section class="sec tone-white" id="tahap" aria-labelledby="stages-title">
+    <section class="sec tone-white" id="process" aria-labelledby="stages-title">
         <div class="container">
             <div class="sec-head" data-reveal>
                 <span class="eyebrow">{{ __('Our work process') }}</span>
@@ -502,7 +502,7 @@
         </div>
     </section>
 
-    <section class="sec tone-paper" id="ruang-kerja" aria-labelledby="why-title">
+    <section class="sec tone-paper" id="why-us" aria-labelledby="why-title">
         <div class="container">
             <div class="sec-head" data-reveal>
                 <span class="eyebrow">{{ __('Why choose us') }}</span>
@@ -541,7 +541,7 @@
     </section>
 
     @if ($featured)
-    <section class="sec tone-white" id="proyek" aria-labelledby="project-title">
+    <section class="sec tone-white" id="projects" aria-labelledby="project-title">
         <div class="container">
             <div class="sec-head" data-reveal>
                 <span class="eyebrow">{{ __('Projects') }}</span>
@@ -575,7 +575,7 @@
     </section>
     @endif
 
-    <section class="sec tone-paper" id="tim" aria-labelledby="team-title">
+    <section class="sec tone-paper" id="team" aria-labelledby="team-title">
         <div class="container">
             <div class="sec-head" data-reveal>
                 <span class="eyebrow">{{ __('Our team') }}</span>
@@ -644,7 +644,7 @@
                 <aside class="faq-aside">
                     <h3>{{ __('Have a different question?') }}</h3>
                     <p>{{ __('Tell us what you need and talk to us directly by phone.') }}</p>
-                    <a href="#kontak" class="btn btn-primary">{{ __('Contact us') }}</a>
+                    <a href="#contact" class="btn btn-primary">{{ __('Contact us') }}</a>
                 </aside>
             </div>
         </div>

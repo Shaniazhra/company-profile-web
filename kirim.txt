@@ -1,0 +1,311 @@
+﻿===== routes\web.php =====
+<?php
+
+use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\SetLocale;
+use Illuminate\Support\Facades\Route;
+
+/* ---------- Situs publik (tamu, ada prefix bahasa) ---------- */
+Route::get('/', fn () => redirect()->route('home', ['locale' => 'id']));
+
+Route::prefix('{locale}')
+    ->where(['locale' => 'id|en'])
+    ->middleware(SetLocale::class)
+    ->group(function () {
+        Route::get('/', [HomeController::class, 'index'])->name('home');
+        Route::view('/tentang-kami', 'about')->name('about');
+
+        // Aktifkan setelah PipelineController dibuat:
+        // Route::get('/alur-produksi', [\App\Http\Controllers\PipelineController::class, 'index'])->name('pipeline');
+    });
+
+/* ---------- Area login (Breeze) ---------- */
+Route::get('/dashboard', fn () => redirect()->route('admin.index'))
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+/* ---------- Admin ---------- */
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
+
+    // Pengaturan situs: tiap bagian disimpan sendiri-sendiri
+    Route::get('site', [SiteSettingController::class, 'edit'])->name('site.edit');
+    Route::put('site/name', [SiteSettingController::class, 'updateName'])->name('site.name');
+    Route::put('site/text/{field}', [SiteSettingController::class, 'updateText'])
+        ->where('field', 'tagline|heart_statement|impact_statement|about_text')
+        ->name('site.text');
+    Route::post('site/image/{field}', [SiteSettingController::class, 'uploadImage'])
+        ->where('field', 'logo|hero_image')
+        ->name('site.image.upload');
+    Route::delete('site/image/{field}', [SiteSettingController::class, 'destroyImage'])
+        ->where('field', 'logo|hero_image')
+        ->name('site.image.destroy');
+
+    Route::resource('services', ServiceController::class)->except('show');
+    Route::patch('services/{service}/move', [ServiceController::class, 'move'])->name('services.move');
+    Route::resource('projects', ProjectController::class)->except(['show']);
+    Route::patch('projects/{project}/publish', [ProjectController::class, 'togglePublish'])->name('projects.publish');
+    Route::resource('clients', ClientController::class)->except('show');
+    Route::patch('clients/{client}/move', [ClientController::class, 'move'])->name('clients.move');
+});
+
+require __DIR__.'/auth.php';
+
+===== app\Http\Middleware\SetLocale.php =====
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
+
+class SetLocale
+{
+    public function handle(Request $request, Closure $next)
+    {
+        $locale = $request->route('locale');
+
+        abort_unless(in_array($locale, ['id', 'en'], true), 404);
+
+        app()->setLocale($locale);
+        URL::defaults(['locale' => $locale]);
+
+        return $next($request);
+    }
+}
+
+===== app\Providers\AppServiceProvider.php =====
+<?php
+
+namespace App\Providers;
+
+use App\Models\SiteSetting;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        //
+    }
+
+    public function boot(): void
+    {
+        $site = null;
+
+        View::composer(
+            ['layouts.site', 'partials.*', 'welcome', 'about', 'pipeline', 'contact'],
+            function ($view) use (&$site) {
+                $site ??= SiteSetting::first() ?? new SiteSetting;
+
+                $view->with([
+                    'site'  => $site,
+                    'loc'   => app()->getLocale(),
+                    'brand' => $site->site_name ?: 'Dream Ratio',
+                ]);
+            }
+        );
+    }
+}
+
+===== app\Http\Controllers\HomeController.php =====
+<?php
+
+namespace App\Http\Controllers;
+
+class HomeController extends Controller
+{
+    public function index()
+    {
+        return view('welcome');
+    }
+}
+
+===== resources\views\layouts\site.blade.php =====
+@php
+    $loc   = app()->getLocale();
+    $home  = Route::has('home') ? route('home', ['locale' => $loc]) : url('/');
+    $brand = ($site->site_name ?? null) ?: 'Dream Ratio';
+
+    $navItems = [
+        ['label' => __('Home'), 'href' => $home, 'active' => request()->routeIs('home')],
+    ];
+    if (Route::has('about')) {
+        $navItems[] = ['label' => __('About'), 'href' => route('about', ['locale' => $loc]), 'active' => request()->routeIs('about')];
+    }
+    if (Route::has('pipeline')) {
+        $navItems[] = ['label' => __('Production Pipeline'), 'href' => route('pipeline', ['locale' => $loc]), 'active' => request()->routeIs('pipeline')];
+    }
+    $navItems[] = ['label' => __('Team'), 'href' => $home.'#team', 'active' => false];
+    $navItems[] = ['label' => __('Projects'), 'href' => $home.'#projects', 'active' => false];
+@endphp
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', $loc) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@yield('title', __('Home')) | {{ $brand }}</title>
+    <meta name="description" content="@yield('description', 'Dream Ratio â€” We Animate Dreams')">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+    @vite(['resources/css/theme.css', 'resources/js/app.js'])
+    <script>document.documentElement.classList.add('js');</script>
+    @stack('head')
+</head>
+<body>
+    @include('partials.navbar')
+
+    <main>
+        @yield('content')
+    </main>
+
+    @include('partials.footer')
+
+    <script>
+        (function () {
+            var nav = document.getElementById('navbar');
+            var onScroll = function () { nav.classList.toggle('is-scrolled', window.scrollY > 12); };
+            onScroll();
+            window.addEventListener('scroll', onScroll, { passive: true });
+
+            var toggle = document.getElementById('nav-toggle');
+            var links = document.getElementById('nav-links');
+            var close = function () {
+                links.classList.remove('is-open');
+                toggle.classList.remove('is-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            };
+            toggle.addEventListener('click', function () {
+                var open = links.classList.toggle('is-open');
+                toggle.classList.toggle('is-open', open);
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+            links.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', close); });
+
+            var items = document.querySelectorAll('[data-reveal]');
+            if (!('IntersectionObserver' in window)) {
+                items.forEach(function (el) { el.classList.add('is-in'); });
+                return;
+            }
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+                });
+            }, { threshold: 0.12 });
+            items.forEach(function (el, i) {
+                el.style.transitionDelay = (i % 4) * 80 + 'ms';
+                io.observe(el);
+            });
+        })();
+    </script>
+    @stack('scripts')
+</body>
+</html>
+
+===== app\Support\AdminForm.php =====
+<?php
+
+namespace App\Support;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class AdminForm
+{
+    /** Bahasa yang tersedia di form admin. Tambah di sini kalau ada bahasa baru. */
+    public const LOCALES = ['id' => 'Indonesia', 'en' => 'English'];
+
+    public static function imageRules(): array
+    {
+        return ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'];
+    }
+
+    /** Aturan validasi untuk satu field multi-bahasa. Bahasa pertama (id) wajib jika $required. */
+    public static function translationRules(string $field, bool $required = false, int $max = 2000): array
+    {
+        $rules = [$field => [$required ? 'required' : 'nullable', 'array']];
+
+        foreach (array_keys(self::LOCALES) as $locale) {
+            $rules["$field.$locale"] = [
+                $required && $locale === array_key_first(self::LOCALES) ? 'required' : 'nullable',
+                'string',
+                "max:$max",
+            ];
+        }
+
+        return $rules;
+    }
+
+    /** Buang bahasa yang dikosongkan. */
+    public static function clean(?array $values): array
+    {
+        return array_filter($values ?? [], fn ($value) => filled($value));
+    }
+
+    /**
+     * Simpan/hapus/ganti gambar. Field "remove_{nama}" = hapus gambar lama.
+     * Mengembalikan path terbaru (atau null).
+     */
+    public static function syncImage(Request $request, ?string $current, string $field, string $dir): ?string
+    {
+        $path = $current;
+
+        if ($request->boolean("remove_$field") && $path) {
+            Storage::disk('public')->delete($path);
+            $path = null;
+        }
+
+        if ($request->hasFile($field)) {
+            if ($path) {
+                Storage::disk('public')->delete($path);
+            }
+            $path = $request->file($field)->store($dir, 'public');
+        }
+
+        return $path;
+    }
+}
+
+===== bootstrap\app.php =====
+<?php
+
+use App\Http\Middleware\EnsureUserIsAdmin;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias([
+            'admin' => EnsureUserIsAdmin::class,
+        ]);
+    })
+    ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->shouldRenderJsonWhen(
+            fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
+        );
+    })->create();
+

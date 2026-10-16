@@ -11,7 +11,7 @@
         </nav>
 
         <div class="nav-actions">
-            <a href="{{ $home }}#kontak" class="btn btn-primary btn-sm nav-cta">{{ __('Contact us') }}</a>
+            <a href="{{ $home }}#contact" class="btn btn-primary btn-sm nav-cta">{{ __('Contact us') }}</a>
 
             <button class="nav-toggle" id="nav-toggle" type="button"
                     aria-label="{{ __('Open menu') }}" aria-expanded="false" aria-controls="nav-links">

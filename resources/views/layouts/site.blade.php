@@ -4,23 +4,23 @@
     $brand = ($site->site_name ?? null) ?: 'Dream Ratio';
 
     $navItems = [
-        ['label' => __('Beranda'), 'href' => $home, 'active' => request()->routeIs('home')],
+        ['label' => __('Home'), 'href' => $home, 'active' => request()->routeIs('home')],
     ];
     if (Route::has('about')) {
-        $navItems[] = ['label' => __('Tentang Kami'), 'href' => route('about', ['locale' => $loc]), 'active' => request()->routeIs('about')];
+        $navItems[] = ['label' => __('About'), 'href' => route('about', ['locale' => $loc]), 'active' => request()->routeIs('about')];
     }
     if (Route::has('pipeline')) {
-        $navItems[] = ['label' => __('Alur Produksi'), 'href' => route('pipeline', ['locale' => $loc]), 'active' => request()->routeIs('pipeline')];
+        $navItems[] = ['label' => __('Production Pipeline'), 'href' => route('pipeline', ['locale' => $loc]), 'active' => request()->routeIs('pipeline')];
     }
-    $navItems[] = ['label' => __('Tim'), 'href' => $home.'#tim', 'active' => false];
-    $navItems[] = ['label' => __('Proyek'), 'href' => $home.'#proyek', 'active' => false];
+    $navItems[] = ['label' => __('Team'), 'href' => $home.'#team', 'active' => false];
+    $navItems[] = ['label' => __('Projects'), 'href' => $home.'#projects', 'active' => false];
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', $loc) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', __('Beranda')) — {{ $brand }}</title>
+    <title>@yield('title', __('Home')) | {{ $brand }}</title>
     <meta name="description" content="@yield('description', 'Dream Ratio — We Animate Dreams')">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -15,8 +15,8 @@
             ['label' => 'Clients',   'icon' => 'clients',  'route' => 'admin.clients.index',  'match' => ['admin.clients.*']],
             ['label' => 'Tim',     'icon' => 'team',     'route' => 'admin.team.index',     'match' => ['admin.team.*', 'admin.divisions.*', 'admin.members.*']],
         ],
-        'Pengaturan' => [
-            ['label' => 'Pengaturan Situs', 'icon' => 'settings', 'route' => 'admin.site.edit', 'match' => ['admin.site.*']],
+        'Settings' => [
+            ['label' => 'Site Settings', 'icon' => 'settings', 'route' => 'admin.site.edit', 'match' => ['admin.site.*']],
         ],
     ];
 
@@ -28,7 +28,7 @@
 <div class="adm-brand">
     <x-brand-logo :site="$site" :brand="$brand" size="md" sub="Panel Admin" />
 
-    <button type="button" class="adm-close" @click="open = false" aria-label="Tutup menu">
+    <button type="button" class="adm-close" @click="open = false" aria-label="Close menu">
         <x-admin.icon name="close" class="h-5 w-5" />
     </button>
 </div>
@@ -59,7 +59,7 @@
         @csrf
         <button type="submit" class="adm-link">
             <x-admin.icon name="logout" class="h-5 w-5" />
-            <span>Keluar</span>
+            <span>Log out</span>
         </button>
     </form>
 </div>

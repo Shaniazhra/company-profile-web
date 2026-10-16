@@ -18,10 +18,10 @@
     <input type="hidden" name="is_active" value="0">
     <input type="checkbox" name="is_active" value="1" class="rounded border-gray-300"
            @checked(old('is_active', $client->exists ? $client->is_active : true))>
-    Tampilkan di website
+    Show on website
 </label>
 
 <div class="flex items-center gap-3">
-    <x-admin.button>Simpan</x-admin.button>
-    <a href="{{ route('admin.clients.index') }}" class="text-sm text-gray-600 hover:text-gray-900">Batal</a>
+    <x-admin.button>Save</x-admin.button>
+    <a href="{{ route('admin.clients.index') }}" class="text-sm text-gray-600 hover:text-gray-900">Cancel</a>
 </div>

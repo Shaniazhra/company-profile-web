@@ -53,7 +53,7 @@
         {{-- Pratinjau: gambar sekarang, atau gambar baru yang baru dipilih --}}
         <div class="img-up-stage {{ $dark ? 'is-dark' : '' }}">
             <template x-if="preview">
-                <img :src="preview" alt="Pratinjau {{ $title }}" class="img-up-img">
+                <img :src="preview" alt="{{ $title }} preview" class="img-up-img">
             </template>
 
             @if ($path)
@@ -73,8 +73,8 @@
 
             <div x-show="preview" x-cloak class="img-up-actions">
                 <span class="img-up-filename" x-text="fileName"></span>
-                <button type="submit" class="btn btn-primary btn-sm">Unggah</button>
-                <button type="button" class="btn btn-outline btn-sm" @click="cancel()">Batal</button>
+                <button type="submit" class="btn btn-primary btn-sm">Upload</button>
+                <button type="button" class="btn btn-outline btn-sm" @click="cancel()">Cancel</button>
             </div>
         </form>
 
@@ -101,7 +101,7 @@
                 @csrf
                 @method('DELETE')
             </form>
-            <button type="submit" form="delete-{{ $name }}" class="btn btn-danger btn-sm" x-show="!preview">Hapus</button>
+            <button type="submit" form="delete-{{ $name }}" class="btn btn-danger btn-sm" x-show="!preview">Delete</button>
         @endif
     </div>
 </section>

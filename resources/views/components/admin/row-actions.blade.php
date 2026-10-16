@@ -16,11 +16,11 @@
         </form>
     @endif
 
-    <a href="{{ $edit }}" class="btn btn-outline btn-sm">Ubah</a>
+    <a href="{{ $edit }}" class="btn btn-outline btn-sm">Edit</a>
 
     <form method="POST" action="{{ $delete }}" onsubmit="return confirm(@js($confirm))">
         @csrf
         @method('DELETE')
-        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
     </form>
 </div>

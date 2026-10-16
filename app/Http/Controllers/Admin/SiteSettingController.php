@@ -22,7 +22,7 @@ class SiteSettingController extends Controller
     /** Kolom gambar. max dalam KB. */
     private const IMAGES = [
         'logo' => ['label' => 'Logo', 'max' => 2048],
-        'hero_image' => ['label' => 'Gambar hero', 'max' => 5120],
+        'hero_image' => ['label' => 'Hero image', 'max' => 5120],
     ];
 
     public function edit()
@@ -76,8 +76,8 @@ class SiteSettingController extends Controller
         $request->validate([
             $field => ['required', 'image', 'mimes:png,jpg,jpeg,webp', 'max:'.$info['max']],
         ], [
-            "$field.required" => 'Pilih file gambar terlebih dahulu.',
-            "$field.image" => 'File harus berupa gambar.',
+            "$field.required" => 'Choose an image file first.',
+            "$field.image" => 'The file must be an image.',
             "$field.mimes" => 'The file must be a PNG, JPG, or WebP image.',
             "$field.max" => "Ukuran file maksimal {$limitMb} MB.",
             "$field.uploaded" => 'Upload failed. The file may exceed the server limit (upload_max_filesize in php.ini).',

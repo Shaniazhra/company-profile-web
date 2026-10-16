@@ -64,10 +64,10 @@
                             <tr>
                                 <th>Project</th>
                                 <th>Tag</th>
-                                <th>Tahun</th>
-                                <th>Urutan</th>
+                                <th>Year</th>
+                                <th>Order</th>
                                 <th>Status</th>
-                                <th>Aksi</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -98,7 +98,7 @@
                                             @method('PATCH')
                                             <button type="submit" class="pa-status {{ $project->is_published ? 'is-live' : '' }}"
                                                     title="Click to change status">
-                                                {{ $project->is_published ? 'Tayang' : 'Draf' }}
+                                                {{ $project->is_published ? 'Published' : 'Draft' }}
                                             </button>
                                         </form>
                                     </td>
@@ -106,14 +106,14 @@
                                         <div class="pa-actions">
                                             <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-outline btn-sm">
                                                 <x-admin.icon name="edit" />
-                                                Ubah
+                                                Edit
                                             </a>
 
                                             <form method="POST" action="{{ route('admin.projects.destroy', $project) }}"
                                                   onsubmit="return confirm({{ \Illuminate\Support\Js::from('Delete project "'.$title.'"? This action cannot be undone.') }})">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                             </form>
                                         </div>
                                     </td>

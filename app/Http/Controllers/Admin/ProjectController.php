@@ -77,7 +77,7 @@ class ProjectController extends Controller
         $project->is_published = ! $project->is_published;
         $project->save();
 
-        return back()->with('status', $project->is_published ? 'Proyek ditayangkan.' : 'Proyek diubah jadi draf.');
+        return back()->with('status', $project->is_published ? 'Project published.' : 'Project set to draft.');
     }
 
     private function validated(Request $request): array
@@ -100,26 +100,26 @@ class ProjectController extends Controller
             'characters.*.photo'          => ['nullable', 'string', 'max:255'],
             'characters.*.photo_file'     => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
         ], [
-            'title.id.required' => 'Judul (Indonesia) wajib diisi.',
+            'title.id.required' => 'The title (Indonesian) is required.',
             'youtube_url.url'   => 'The YouTube link is not valid.',
             'youtube_url.regex' => 'The link must be from youtube.com or youtu.be.',
-            'image.image'       => 'File harus berupa gambar.',
+            'image.image'       => 'The file must be an image.',
             'image.mimes'       => 'The image must be a PNG, JPG, or WebP file.',
-            'image.max'         => 'Ukuran gambar maksimal 5 MB.',
+            'image.max'         => 'The image may not be larger than 5 MB.',
             'image.uploaded'    => 'Upload failed. The file may exceed the server limit (upload_max_filesize in php.ini).',
-            'logo.image'        => 'Logo harus berupa gambar.',
+            'logo.image'        => 'The logo must be an image.',
             'logo.mimes'        => 'The logo must be a PNG, JPG, or WebP file.',
             'logo.max'          => 'Ukuran logo maksimal 2 MB.',
             'logo.uploaded'     => 'Logo upload failed. The file may exceed the server limit.',
-            'characters.*.photo_file.image'    => 'Foto karakter harus berupa gambar.',
+            'characters.*.photo_file.image'    => 'The character photo must be an image.',
             'characters.*.photo_file.mimes'    => 'The character photo must be a PNG, JPG, or WebP file.',
-            'characters.*.photo_file.max'      => 'Ukuran foto karakter maksimal 2 MB.',
+            'characters.*.photo_file.max'      => 'The character photo may not be larger than 2 MB.',
             'characters.*.photo_file.uploaded' => 'Character photo upload failed. The file may exceed the server limit.',
         ], [
-            'title.en' => 'judul (English)', 'tag.id' => 'tag (Indonesia)', 'tag.en' => 'tag (English)',
-            'synopsis.id' => 'sinopsis (Indonesia)', 'synopsis.en' => 'sinopsis (English)',
-            'release_year' => 'tahun rilis', 'sort_order' => 'urutan',
-            'characters.*.name' => 'nama karakter', 'characters.*.role' => 'peran karakter',
+            'title.en' => 'title (English)', 'tag.id' => 'tag (Indonesian)', 'tag.en' => 'tag (English)',
+            'synopsis.id' => 'synopsis (Indonesian)', 'synopsis.en' => 'synopsis (English)',
+            'release_year' => 'release year', 'sort_order' => 'order',
+            'characters.*.name' => 'character name', 'characters.*.role' => 'character role',
         ]);
     }
 

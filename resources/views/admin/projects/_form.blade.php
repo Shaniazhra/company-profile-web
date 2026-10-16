@@ -100,12 +100,12 @@
 
             <div class="pf-grid">
                 <div>
-                    <label class="pf-label" for="title_id">Judul <small>(Indonesia, wajib)</small></label>
+                    <label class="pf-label" for="title_id">Title <small>(Indonesian, required)</small></label>
                     <input id="title_id" name="title[id]" type="text" class="pf-input" maxlength="150" required x-model="title">
                     @error('title.id')<p class="pf-error">{{ $message }}</p>@enderror
                 </div>
                 <div>
-                    <label class="pf-label" for="title_en">Judul <small>(English)</small></label>
+                    <label class="pf-label" for="title_en">Title <small>(English)</small></label>
                     <input id="title_en" name="title[en]" type="text" class="pf-input" maxlength="150"
                            value="{{ old('title.en', $project->getTranslation('title', 'en', false)) }}">
                     @error('title.en')<p class="pf-error">{{ $message }}</p>@enderror
@@ -127,13 +127,13 @@
 
             <div class="pf-grid pf-grid--3">
                 <div>
-                    <label class="pf-label" for="release_year">Tahun rilis</label>
+                    <label class="pf-label" for="release_year">Release year</label>
                     <input id="release_year" name="release_year" type="number" class="pf-input" min="1990" max="2100"
                            value="{{ old('release_year', $project->release_year) }}">
                     @error('release_year')<p class="pf-error">{{ $message }}</p>@enderror
                 </div>
                 <div>
-                    <label class="pf-label" for="sort_order">Urutan <small>(kecil tampil dulu)</small></label>
+                    <label class="pf-label" for="sort_order">Order <small>(lower shows first)</small></label>
                     <input id="sort_order" name="sort_order" type="number" class="pf-input" min="0" max="9999"
                            value="{{ old('sort_order', $project->sort_order ?? 0) }}">
                     @error('sort_order')<p class="pf-error">{{ $message }}</p>@enderror
@@ -149,17 +149,17 @@
 
         {{-- ===== LOGO JUDUL ===== --}}
         <section class="pf-card" x-data="{ dark: false }">
-            <h3>Logo judul <small>(opsional)</small></h3>
+            <h3>Title logo <small>(optional)</small></h3>
             <p class="pf-hint">If a logo is set, the logo is shown as the title on the website. If empty, the text title above is shown.</p>
 
             <div class="pf-logo-stage" :class="{ 'is-dark': dark }">
-                <template x-if="logo && !dropLogo"><img :src="logo" alt="Pratinjau logo judul" class="pf-logo-img"></template>
+                <template x-if="logo && !dropLogo"><img :src="logo" alt="Title logo preview" class="pf-logo-img"></template>
                 <span class="pf-logo-text" x-show="!logo || dropLogo" x-text="title.trim() || 'Title not set yet'"></span>
             </div>
 
             <div class="pf-logo-meta">
                 <span x-text="logo && !dropLogo ? 'Shown on the website: logo' : 'Shown on the website: text title'"></span>
-                <span class="pf-toggle" role="group" aria-label="Latar pratinjau">
+                <span class="pf-toggle" role="group" aria-label="Preview background">
                     <button type="button" :class="{ 'is-on': !dark }" @click="dark = false">Latar terang</button>
                     <button type="button" :class="{ 'is-on': dark }" @click="dark = true">Latar gelap</button>
                 </span>
@@ -173,14 +173,14 @@
             @if ($project->logo)
                 <label class="pf-check">
                     <input type="checkbox" name="remove_logo" value="1" x-model="dropLogo">
-                    Hapus logo, pakai judul teks saja
+                    Remove logo, use the text title only
                 </label>
             @endif
         </section>
 
         {{-- ===== SINOPSIS ===== --}}
         <section class="pf-card">
-            <h3>Sinopsis</h3>
+            <h3>Synopsis</h3>
             <p class="pf-hint">Shown on the project detail page.</p>
 
             <div class="pf-grid">
@@ -214,7 +214,7 @@
             @if ($project->image)
                 <label class="pf-check">
                     <input type="checkbox" name="remove_image" value="1" x-model="removed">
-                    Hapus gambar saat ini
+                    Remove current image
                 </label>
             @endif
         </section>
@@ -237,7 +237,7 @@
                         if (input) { input.value = '' }
                     }
                  }">
-            <h3>Karakter</h3>
+            <h3>Characters</h3>
             <p class="pf-hint">The characters in this animation, with photos (max 2 MB each). Rows without a name are ignored.</p>
 
             <p class="pf-empty" x-show="rows.length === 0">No characters yet.</p>
@@ -253,22 +253,22 @@
 
                             <div class="pf-photo-actions">
                                 <label class="pf-photo-btn">
-                                    <span x-text="row.photo_url ? 'Ganti foto' : 'Pilih foto'"></span>
+                                    <span x-text="row.photo_url ? 'Change photo' : 'Choose photo'"></span>
                                     <input type="file" class="pf-sr" accept="image/png,image/jpeg,image/webp"
                                            :name="`characters[${i}][photo_file]`" @change="pick($event, row)">
                                 </label>
-                                <button type="button" class="pf-link" x-show="row.photo_url" @click="clearPhoto($event, row)">Hapus foto</button>
+                                <button type="button" class="pf-link" x-show="row.photo_url" @click="clearPhoto($event, row)">Remove photo</button>
                             </div>
                         </div>
 
                         <input type="hidden" :name="`characters[${i}][photo]`" :value="row.photo">
 
-                        <input type="text" class="pf-input" placeholder="Nama karakter" maxlength="80"
-                               :name="`characters[${i}][name]`" x-model="row.name" aria-label="Nama karakter">
-                        <input type="text" class="pf-input" placeholder="Peran (mis. Tokoh utama)" maxlength="120"
-                               :name="`characters[${i}][role]`" x-model="row.role" aria-label="Peran karakter">
+                        <input type="text" class="pf-input" placeholder="Character name" maxlength="80"
+                               :name="`characters[${i}][name]`" x-model="row.name" aria-label="Character name">
+                        <input type="text" class="pf-input" placeholder="Role (e.g. Main character)" maxlength="120"
+                               :name="`characters[${i}][role]`" x-model="row.role" aria-label="Character role">
 
-                        <button type="button" class="btn btn-danger btn-sm" @click="remove(i)">Hapus</button>
+                        <button type="button" class="btn btn-danger btn-sm" @click="remove(i)">Delete</button>
                     </div>
                 </template>
             </div>
@@ -280,7 +280,7 @@
 
             <button type="button" class="btn btn-outline btn-sm pf-add" @click="add()">
                 <x-admin.icon name="plus" />
-                Tambah karakter
+                Add character
             </button>
         </section>
 
@@ -291,7 +291,7 @@
                 Tayangkan di website
             </label>
 
-            <a href="{{ route('admin.projects.index') }}" class="btn btn-outline btn-sm">Batal</a>
+            <a href="{{ route('admin.projects.index') }}" class="btn btn-outline btn-sm">Cancel</a>
             <button type="submit" class="btn btn-primary btn-sm">{{ $project->exists ? 'Save changes' : 'Save project' }}</button>
         </div>
     </form>

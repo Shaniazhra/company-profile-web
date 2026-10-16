@@ -86,8 +86,8 @@
         $flash = fn (string $key) => session('section') === $key ? session('status') : null;
 
         $texts = [
-            ['field' => 'tagline',          'title' => 'Tagline',          'desc' => 'Judul besar di bagian utama (hero) halaman depan.', 'rows' => 1],
-            ['field' => 'heart_statement',  'title' => 'Heart Statement',  'desc' => 'Kalimat pendukung di bawah judul hero.',            'rows' => 4],
+            ['field' => 'tagline',          'title' => 'Tagline',          'desc' => 'Large headline in the hero section of the home page.', 'rows' => 1],
+            ['field' => 'heart_statement',  'title' => 'Heart Statement',  'desc' => 'Supporting sentence under the hero headline.',            'rows' => 4],
             ['field' => 'impact_statement', 'title' => 'Impact Statement', 'desc' => 'Impact statement shown on the home page and the About page.', 'rows' => 4],
             ['field' => 'about_text',       'title' => 'About Text', 'desc' => 'Studio description on the About page.',        'rows' => 6],
         ];
@@ -107,12 +107,12 @@
                     @method('PUT')
 
                     <div class="site-card-head">
-                        <h3>Nama Situs</h3>
-                        <p>Tampil di judul tab browser, navbar, dan footer.</p>
+                        <h3>Site Name</h3>
+                        <p>Shown in the browser tab title, navbar, and footer.</p>
                     </div>
 
                     <div class="site-card-body">
-                        <x-input-label for="site_name" value="Nama Situs" />
+                        <x-input-label for="site_name" value="Site Name" />
                         <x-text-input id="site_name" name="site_name" type="text" class="mt-1 block w-full"
                                       :value="old('site_name', $site->site_name)" required />
                         <x-input-error :messages="$errors->get('site_name')" class="mt-1" />
@@ -122,7 +122,7 @@
                         @if ($msg = $flash('name'))
                             <p class="site-note" role="status"><x-admin.icon name="check" class="h-4 w-4" />{{ $msg }}</p>
                         @endif
-                        <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
                     </div>
                 </form>
             </section>
@@ -130,7 +130,7 @@
 
         {{-- ===== Gambar ===== --}}
         <div>
-            <p class="site-group">Gambar</p>
+            <p class="site-group">Images</p>
 
             <div class="site-grid site-grid--2">
                 <x-admin.image-upload
@@ -144,8 +144,8 @@
                     :message="$flash('logo')" />
 
                 <x-admin.image-upload
-                    name="hero_image" kind="hero" title="Gambar Latar Hero"
-                    description="Gambar latar bagian utama halaman depan. Kalau kosong, hero memakai gradasi."
+                    name="hero_image" kind="hero" title="Hero Background Image"
+                    description="Background image for the hero section of the home page. If empty, the hero uses a gradient."
                     :path="$site->hero_image"
                     :upload-route="route('admin.site.image.upload', 'hero_image')"
                     :delete-route="route('admin.site.image.destroy', 'hero_image')"
@@ -179,7 +179,7 @@
                                 @if ($msg = $flash($t['field']))
                                     <p class="site-note" role="status"><x-admin.icon name="check" class="h-4 w-4" />{{ $msg }}</p>
                                 @endif
-                                <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                                <button type="submit" class="btn btn-primary btn-sm">Save</button>
                             </div>
                         </form>
                     </section>

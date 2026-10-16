@@ -15,16 +15,16 @@ return [
     [
         'group' => 'Konten',
         'items' => [
-            ['label' => 'Layanan', 'route' => 'admin.services.index', 'match' => 'admin.services.*', 'icon' => 'services'],
-            ['label' => 'Proyek', 'route' => 'admin.projects.index', 'match' => 'admin.projects.*', 'icon' => 'projects'],
-            ['label' => 'Klien', 'route' => 'admin.clients.index', 'match' => 'admin.clients.*', 'icon' => 'clients'],
+            ['label' => 'Services', 'route' => 'admin.services.index', 'match' => 'admin.services.*', 'icon' => 'services'],
+            ['label' => 'Projects', 'route' => 'admin.projects.index', 'match' => 'admin.projects.*', 'icon' => 'projects'],
+            ['label' => 'Clients', 'route' => 'admin.clients.index', 'match' => 'admin.clients.*', 'icon' => 'clients'],
             ['label' => 'Tim', 'route' => 'admin.team.index', 'match' => 'admin.team.*', 'icon' => 'team'],
         ],
     ],
     [
-        'group' => 'Pengaturan',
+        'group' => 'Settings',
         'items' => [
-            ['label' => 'Pengaturan Situs', 'route' => 'admin.site.edit', 'match' => 'admin.site.*', 'icon' => 'settings'],
+            ['label' => 'Site Settings', 'route' => 'admin.site.edit', 'match' => 'admin.site.*', 'icon' => 'settings'],
         ],
     ],
 ];

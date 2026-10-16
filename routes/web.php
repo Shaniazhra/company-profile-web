@@ -75,6 +75,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         'faqs' => \App\Http\Controllers\Admin\FaqController::class,
         'process' => \App\Http\Controllers\Admin\ProcessStageController::class,
         'contacts' => \App\Http\Controllers\Admin\ContactPersonController::class,
+        'highlights' => \App\Http\Controllers\Admin\HighlightController::class,
+        'focus' => \App\Http\Controllers\Admin\FocusShotController::class,
     ] as $name => $controller) {
         Route::resource($name, $controller)->except('show')->parameters([$name => 'item']);
         Route::patch($name.'/{item}/move', [$controller, 'move'])->name($name.'.move');

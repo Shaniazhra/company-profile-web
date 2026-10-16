@@ -476,6 +476,36 @@
     }
 @endphp
 
+@php
+    // Content from the admin panel. If a table is empty, the defaults above stay in place.
+    $results = [
+        __('Lighting is done in real time, so rendering is much lighter.'),
+        __('A rough compile of one episode is ready in 3 days.'),
+        __('One shot renders in 1 minute on 1 computer.'),
+    ];
+
+    $dbReasons = \App\Models\Highlight::reasons()->get();
+    if ($dbReasons->isNotEmpty()) {
+        $reasons = $dbReasons->map(fn ($r) => ['title' => $r->title, 'text' => $r->text, 'icon' => $r->icon_paths])->all();
+    }
+
+    $dbResults = \App\Models\Highlight::results()->pluck('text')->all();
+    if ($dbResults) {
+        $results = $dbResults;
+    }
+
+    $dbShots = \App\Models\FocusShot::active()->ordered()->get();
+    if ($dbShots->isNotEmpty()) {
+        $shots = $dbShots->map(fn ($s) => ['title' => $s->title, 'img' => $s->image ? asset('storage/'.$s->image) : null])->all();
+        $hasShots = collect($shots)->contains(fn ($s) => ! empty($s['img']));
+    }
+
+    $dbClients = \App\Models\Client::active()->ordered()->get();
+    if ($dbClients->isNotEmpty()) {
+        $clients = $dbClients->map(fn ($c) => [$c->name, $c->logo ? asset('storage/'.$c->logo) : null])->all();
+    }
+@endphp
+
 <div class="home">
 
     <section class="home-hero {{ $heroImg ? 'has-image' : '' }}">
@@ -526,9 +556,7 @@
             </ol>
 
             <ul class="results" aria-label="{{ __('The result') }}" data-reveal>
-                <li>{{ __('Lighting is done in real time, so rendering is much lighter.') }}</li>
-                <li>{{ __('A rough compile of one episode is ready in 3 days.') }}</li>
-                <li>{{ __('One shot renders in 1 minute on 1 computer.') }}</li>
+                @foreach ($results as $line)<li>{{ $line }}</li>@endforeach
             </ul>
         </div>
     </section>
@@ -645,7 +673,7 @@
             <h2 id="clients-title">{{ __('Our clients') }}</h2>
             <div class="client-row">
                 @foreach ($clients as [$cn, $cf])
-                    @if ($logo = $img($cf))
+                    @if ($logo = $cf ? (str_starts_with($cf, 'http') ? $cf : $img($cf)) : null)
                         <img src="{{ $logo }}" alt="{{ $cn }}" loading="lazy">
                     @else
                         <span>{{ $cn }}</span>

@@ -3,13 +3,22 @@
     $siteUrl   = route('home', ['locale' => 'en']);
 
     $stats = [
-        ['label' => 'Services',     'icon' => 'services', 'route' => 'admin.services.index', 'total' => $counts['services']['total'], 'note' => $counts['services']['live'].' shown'],
-        ['label' => 'Projects',      'icon' => 'projects', 'route' => 'admin.projects.index', 'total' => $counts['projects']['total'], 'note' => $counts['projects']['live'].' live'],
-        ['label' => 'Clients',       'icon' => 'clients',  'route' => 'admin.clients.index',  'total' => $counts['clients']['total'],  'note' => $counts['clients']['live'].' shown'],
-        ['label' => 'Team Members', 'icon' => 'team',     'route' => 'admin.team.index',     'total' => $counts['members']['total'],  'note' => $counts['divisions'].' divisions', 'featured' => true],
+        ['label' => 'Services',     'icon' => 'services', 'route' => 'admin.services.index',  'total' => $counts['services']['total'], 'note' => $counts['services']['live'].' shown'],
+        ['label' => 'Projects',     'icon' => 'projects', 'route' => 'admin.projects.index',  'total' => $counts['projects']['total'], 'note' => $counts['projects']['live'].' live'],
+        ['label' => 'Clients',      'icon' => 'clients',  'route' => 'admin.clients.index',   'total' => $counts['clients']['total'],  'note' => $counts['clients']['live'].' shown'],
+        ['label' => 'Team Members', 'icon' => 'team',     'route' => 'admin.team.index',      'total' => $counts['team']['total'],     'note' => $counts['team']['live'].' shown'],
+        ['label' => 'Inquiries',    'icon' => 'user',     'route' => 'admin.inquiries.index', 'total' => $counts['inquiries']['total'], 'note' => $counts['inquiries']['unread'].' unread', 'featured' => true],
+    ];
+
+    // Shortcuts to the content that feeds the home page: [label, route, key in $counts]
+    $quick = [
+        ['Process stages',     'admin.process.index',    'process'],
+        ['Highlights',         'admin.highlights.index', 'highlights'],
+        ['Focus screenshots',  'admin.focus.index',      'focus'],
+        ['FAQ',                'admin.faqs.index',       'faqs'],
+        ['Contacts',           'admin.contacts.index',   'contacts'],
     ];
 @endphp
-
 <x-admin-layout>
     <style>
         /* Font, ukuran teks, tombol, dan radius semuanya dari theme.css (var(--fs-*), var(--radius*), .btn) */
@@ -30,7 +39,7 @@
         .dash-head-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
         /* ---------- Kartu angka ---------- */
-        .dash-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+        .dash-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem; }
         .dash-stat {
             display: flex;
             align-items: center;
@@ -110,6 +119,12 @@
 
         .dash-empty { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 2rem 1.25rem 2.25rem; text-align: center; border-top: 1px solid var(--color-border); }
 
+        .dash-quick { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1px; background: var(--color-border); border-top: 1px solid var(--color-border); }
+        .dash-quick-item { display: block; padding: 1rem 1.25rem; color: inherit; text-decoration: none; background: var(--color-surface); transition: background 0.2s; }
+        .dash-quick-item:hover { background: var(--d-soft); }
+        .dash-quick-name { display: block; font-size: var(--fs-small); font-weight: 600; color: var(--color-text); }
+        .dash-quick-note { display: block; margin-top: 0.1rem; font-size: var(--fs-caption); color: var(--color-muted); }
+
         /* ---------- Responsif ---------- */
         @media (max-width: 1100px) {
             .dash-stats { grid-template-columns: repeat(2, 1fr); }
@@ -178,6 +193,21 @@
             @endforeach
         </section>
 
+        {{-- ===== HOME PAGE CONTENT ===== --}}
+        <section class="dash-panel">
+            <div class="dash-panel-head"><h3>Home page content</h3></div>
+            <div class="dash-quick">
+                @foreach ($quick as [$qLabel, $qRoute, $qKey])
+                    @if (Route::has($qRoute))
+                        <a href="{{ route($qRoute) }}" class="dash-quick-item">
+                            <span class="dash-quick-name">{{ $qLabel }}</span>
+                            <span class="dash-quick-note">{{ $counts[$qKey]['live'] }} of {{ $counts[$qKey]['total'] }} shown</span>
+                        </a>
+                    @endif
+                @endforeach
+            </div>
+        </section>
+
         <div class="dash-grid">
 
             {{-- ===== PROYEK TERBARU ===== --}}
@@ -220,7 +250,7 @@
                                     <td data-label="Year">{{ $project->release_year ?: '-' }}</td>
                                     <td data-label="Status">
                                         <span class="dash-status {{ $project->is_published ? 'is-live' : 'is-draft' }}">
-                                            {{ $project->is_published ? 'Live' : 'Draftt' }}
+                                            {{ $project->is_published ? 'Live' : 'Draft' }}
                                         </span>
                                     </td>
                                 </tr>

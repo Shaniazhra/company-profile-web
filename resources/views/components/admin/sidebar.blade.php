@@ -9,11 +9,21 @@
         'Utama' => [
             ['label' => 'Dashboard', 'icon' => 'dashboard', 'route' => 'admin.index', 'match' => ['admin.index']],
         ],
-        'Konten Website' => [
+        'Home page' => [
             ['label' => 'Services', 'icon' => 'services', 'route' => 'admin.services.index', 'match' => ['admin.services.*']],
-            ['label' => 'Projects',  'icon' => 'projects', 'route' => 'admin.projects.index', 'match' => ['admin.projects.*']],
-            ['label' => 'Clients',   'icon' => 'clients',  'route' => 'admin.clients.index',  'match' => ['admin.clients.*']],
-            ['label' => 'Tim',     'icon' => 'team',     'route' => 'admin.team.index',     'match' => ['admin.team.*', 'admin.divisions.*', 'admin.members.*']],
+            ['label' => 'Projects', 'icon' => 'projects', 'route' => 'admin.projects.index', 'match' => ['admin.projects.*']],
+            ['label' => 'Process', 'icon' => 'projects', 'route' => 'admin.process.index', 'match' => ['admin.process.*']],
+            ['label' => 'Highlights', 'icon' => 'services', 'route' => 'admin.highlights.index', 'match' => ['admin.highlights.*']],
+            ['label' => 'Focus screenshots', 'icon' => 'projects', 'route' => 'admin.focus.index', 'match' => ['admin.focus.*']],
+            ['label' => 'Clients', 'icon' => 'clients', 'route' => 'admin.clients.index', 'match' => ['admin.clients.*']],
+            ['label' => 'FAQ', 'icon' => 'services', 'route' => 'admin.faqs.index', 'match' => ['admin.faqs.*']],
+        ],
+        'Company' => [
+            ['label' => 'Team', 'icon' => 'team', 'route' => 'admin.team.index', 'match' => ['admin.team.*']],
+            ['label' => 'Contacts', 'icon' => 'user', 'route' => 'admin.contacts.index', 'match' => ['admin.contacts.*']],
+        ],
+        'Inbox' => [
+            ['label' => 'Inquiries', 'icon' => 'clients', 'route' => 'admin.inquiries.index', 'match' => ['admin.inquiries.*']],
         ],
         'Settings' => [
             ['label' => 'Site Settings', 'icon' => 'settings', 'route' => 'admin.site.edit', 'match' => ['admin.site.*']],

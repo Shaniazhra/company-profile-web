@@ -564,7 +564,7 @@
                     <p class="pj-tag">{{ $featured['tag'] }}</p>
                     <p class="pj-synopsis">{{ !empty($featured['synopsis']) ? $featured['synopsis'] : __('Synopsis coming soon') }}</p>
 
-                    @if (count($others))
+                    @if (count($others) && $projectsRoute)
                         <div class="btn-row">
                             <a href="{{ $projectsUrl }}" class="btn btn-primary">{{ __('View other projects') }} {!! $arrow !!}</a>
                         </div>

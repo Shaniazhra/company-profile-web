@@ -10,12 +10,8 @@ class SetLocale
 {
     public function handle(Request $request, Closure $next)
     {
-        $locale = $request->route('locale');
-
-        abort_unless(in_array($locale, ['id', 'en'], true), 404);
-
-        app()->setLocale($locale);
-        URL::defaults(['locale' => $locale]);
+        app()->setLocale('en');
+        URL::defaults(['locale' => 'en']);
 
         return $next($request);
     }

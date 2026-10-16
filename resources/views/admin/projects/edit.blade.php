@@ -1,4 +1,4 @@
-<x-admin-layout title="Ubah Proyek">
+<x-admin-layout title="Edit Project">
     @include('admin.projects._form', [
         'project' => $project,
         'action'  => route('admin.projects.update', $project),

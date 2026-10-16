@@ -33,7 +33,7 @@ class ProjectController extends Controller
         $project->slug = $this->uniqueSlug($data['title']['id']);
         $this->persist($project, $request, $data);
 
-        return redirect()->route('admin.projects.index')->with('status', 'Proyek berhasil ditambahkan.');
+        return redirect()->route('admin.projects.index')->with('status', 'Project added.');
     }
 
     public function edit(Project $project)
@@ -52,7 +52,7 @@ class ProjectController extends Controller
 
         $this->persist($project, $request, $data);
 
-        return redirect()->route('admin.projects.index')->with('status', 'Perubahan proyek disimpan.');
+        return redirect()->route('admin.projects.index')->with('status', 'Project changes saved.');
     }
 
     public function destroy(Project $project): RedirectResponse
@@ -68,7 +68,7 @@ class ProjectController extends Controller
             $this->deleteFile($file);
         }
 
-        return redirect()->route('admin.projects.index')->with('status', 'Proyek dihapus.');
+        return redirect()->route('admin.projects.index')->with('status', 'Project deleted.');
     }
 
     /** Ganti status tayang/draf dari daftar. */
@@ -101,20 +101,20 @@ class ProjectController extends Controller
             'characters.*.photo_file'     => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
         ], [
             'title.id.required' => 'Judul (Indonesia) wajib diisi.',
-            'youtube_url.url'   => 'Link YouTube tidak valid.',
-            'youtube_url.regex' => 'Link harus dari youtube.com atau youtu.be.',
+            'youtube_url.url'   => 'The YouTube link is not valid.',
+            'youtube_url.regex' => 'The link must be from youtube.com or youtu.be.',
             'image.image'       => 'File harus berupa gambar.',
-            'image.mimes'       => 'Format gambar harus PNG, JPG, atau WebP.',
+            'image.mimes'       => 'The image must be a PNG, JPG, or WebP file.',
             'image.max'         => 'Ukuran gambar maksimal 5 MB.',
-            'image.uploaded'    => 'Unggahan gagal. Ukuran file kemungkinan melebihi batas server (upload_max_filesize di php.ini).',
+            'image.uploaded'    => 'Upload failed. The file may exceed the server limit (upload_max_filesize in php.ini).',
             'logo.image'        => 'Logo harus berupa gambar.',
-            'logo.mimes'        => 'Format logo harus PNG, JPG, atau WebP.',
+            'logo.mimes'        => 'The logo must be a PNG, JPG, or WebP file.',
             'logo.max'          => 'Ukuran logo maksimal 2 MB.',
-            'logo.uploaded'     => 'Unggahan logo gagal. Ukuran file kemungkinan melebihi batas server.',
+            'logo.uploaded'     => 'Logo upload failed. The file may exceed the server limit.',
             'characters.*.photo_file.image'    => 'Foto karakter harus berupa gambar.',
-            'characters.*.photo_file.mimes'    => 'Format foto karakter harus PNG, JPG, atau WebP.',
+            'characters.*.photo_file.mimes'    => 'The character photo must be a PNG, JPG, or WebP file.',
             'characters.*.photo_file.max'      => 'Ukuran foto karakter maksimal 2 MB.',
-            'characters.*.photo_file.uploaded' => 'Unggahan foto karakter gagal. Ukuran file kemungkinan melebihi batas server.',
+            'characters.*.photo_file.uploaded' => 'Character photo upload failed. The file may exceed the server limit.',
         ], [
             'title.en' => 'judul (English)', 'tag.id' => 'tag (Indonesia)', 'tag.en' => 'tag (English)',
             'synopsis.id' => 'sinopsis (Indonesia)', 'synopsis.en' => 'sinopsis (English)',

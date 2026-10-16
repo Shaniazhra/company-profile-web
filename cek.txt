@@ -1,0 +1,49 @@
+﻿=== unused.txt ===
+=== sisa teks Indonesia tanpa komentar ===
+=== pesan flash dan kata Indonesia lain ===
+app\Console\Commands\CreateAdmin.php:14: protected $description = 'Buat atau perbarui akun admin';
+app\Console\Commands\CreateAdmin.php:31: $this->warn('Simpan password ini sekarang, tidak akan ditampilkan lagi.');
+app\Http\Controllers\Admin\ClientController.php:30: return redirect()->route('admin.clients.index')->with('status', 'Klien ditambahkan.');
+app\Http\Controllers\Admin\ClientController.php:42: return redirect()->route('admin.clients.index')->with('status', 'Klien diperbarui.');
+app\Http\Controllers\Admin\ClientController.php:52: return redirect()->route('admin.clients.index')->with('status', 'Klien dihapus.');
+app\Http\Controllers\Admin\ProjectController.php:36: return redirect()->route('admin.projects.index')->with('status', 'Proyek berhasil ditambahkan.');
+app\Http\Controllers\Admin\ProjectController.php:55: return redirect()->route('admin.projects.index')->with('status', 'Perubahan proyek disimpan.');
+app\Http\Controllers\Admin\ProjectController.php:71: return redirect()->route('admin.projects.index')->with('status', 'Proyek dihapus.');
+app\Http\Controllers\Admin\ProjectController.php:104: 'youtube_url.url'   => 'Link YouTube tidak valid.',
+app\Http\Controllers\Admin\ProjectController.php:105: 'youtube_url.regex' => 'Link harus dari youtube.com atau youtu.be.',
+app\Http\Controllers\Admin\ProjectController.php:107: 'image.mimes'       => 'Format gambar harus PNG, JPG, atau WebP.',
+app\Http\Controllers\Admin\ProjectController.php:109: 'image.uploaded'    => 'Unggahan gagal. Ukuran file kemungkinan melebihi batas server (upload_max_filesize di php.ini).',
+app\Http\Controllers\Admin\ProjectController.php:111: 'logo.mimes'        => 'Format logo harus PNG, JPG, atau WebP.',
+app\Http\Controllers\Admin\ProjectController.php:113: 'logo.uploaded'     => 'Unggahan logo gagal. Ukuran file kemungkinan melebihi batas server.',
+app\Http\Controllers\Admin\ProjectController.php:115: 'characters.*.photo_file.mimes'    => 'Format foto karakter harus PNG, JPG, atau WebP.',
+app\Http\Controllers\Admin\ProjectController.php:117: 'characters.*.photo_file.uploaded' => 'Unggahan foto karakter gagal. Ukuran file kemungkinan melebihi batas server.',
+app\Http\Controllers\Admin\ServiceController.php:32: return redirect()->route('admin.services.index')->with('status', 'Layanan ditambahkan.');
+app\Http\Controllers\Admin\ServiceController.php:44: return redirect()->route('admin.services.index')->with('status', 'Layanan diperbarui.');
+app\Http\Controllers\Admin\ServiceController.php:54: return redirect()->route('admin.services.index')->with('status', 'Layanan dihapus.');
+app\Http\Controllers\Admin\SiteSettingController.php:46: return $this->saved('name', 'Nama situs disimpan.');
+app\Http\Controllers\Admin\SiteSettingController.php:65: return $this->saved($field, 'Teks disimpan.');
+app\Http\Controllers\Admin\SiteSettingController.php:81: "$field.mimes" => 'Format harus PNG, JPG, atau WebP.',
+app\Http\Controllers\Admin\SiteSettingController.php:83: "$field.uploaded" => 'Unggahan gagal. Ukuran file kemungkinan melebihi batas server (upload_max_filesize di php.ini).',
+app\Http\Controllers\Admin\SiteSettingController.php:92: return $this->saved($field, $info['label'].' berhasil diunggah.');
+app\Http\Controllers\Admin\SiteSettingController.php:106: return $this->saved($field, self::IMAGES[$field]['label'].' dihapus.');
+resources\views\admin\projects\index.blade.php:100: title="Klik untuk mengubah status">
+resources\views\admin\projects\_form.blade.php:153: <p class="pf-hint">Kalau logo diisi, logo yang tampil sebagai judul di website. Kalau kosong, yang tampil judul teks di atas.</p>
+resources\views\admin\projects\_form.blade.php:157: <span class="pf-logo-text" x-show="!logo || dropLogo" x-text="title.trim() || 'Judul belum diisi'"></span>
+resources\views\admin\projects\_form.blade.php:161: <span x-text="logo && !dropLogo ? 'Yang tampil di website: logo' : 'Yang tampil di website: judul teks'"></span>
+resources\views\admin\projects\_form.blade.php:203: <p class="pf-hint">PNG, JPG, atau WebP, maksimal 5 MB. Disarankan rasio 16:9.</p>
+resources\views\admin\projects\_form.blade.php:207: <span x-show="!preview || removed">Belum ada gambar</span>
+resources\views\admin\projects\_form.blade.php:241: <p class="pf-hint">Daftar karakter dalam animasi ini, lengkap dengan foto (maks. 2 MB per foto). Baris tanpa nama diabaikan.</p>
+resources\views\admin\projects\_form.blade.php:243: <p class="pf-empty" x-show="rows.length === 0">Belum ada karakter.</p>
+resources\views\admin\services\index.blade.php:31: <p class="truncate text-sm text-gray-500">{{ $service->getTranslation('summary', 'id', false) ?: 'Belum ada ringkasan' }}</p>
+resources\views\admin\site\edit.blade.php:98: <p class="site-intro">Setiap bagian disimpan sendiri, jadi kamu bisa mengubah satu bagian tanpa mengisi yang lain.</p>
+resources\views\admin\site\edit.blade.php:138: description="Tampil di navbar dan footer. Kalau kosong, nama situs yang tampil."
+resources\views\admin\site\edit.blade.php:153: help="Foto landscape, lebar minimal 1600 px, maksimal 5 MB. Bagian kiri sebaiknya tidak terlalu ramai agar teks terbaca."
+resources\views\components\admin\image-upload.blade.php:62: <p x-show="!preview" class="img-up-empty">Belum ada gambar</p>
+resources\views\components\admin\image-upload.blade.php:65: <span x-show="preview" x-cloak class="img-up-badge">Pratinjau, belum diunggah</span>
+resources\views\components\admin\image-upload.blade.php:100: onsubmit="return confirm('Hapus gambar ini dari website?')">
+resources\views\components\admin\row-actions.blade.php:1: @props(['edit', 'delete', 'move' => null, 'first' => false, 'last' => false, 'confirm' => 'Hapus item ini? Tindakan ini tidak bisa dibatalkan.'])
+resources\views\components\admin-layout.blade.php:47: Font, ukuran teks, radius, dan tombol tetap dari theme.css. */
+resources\views\components\admin-layout.blade.php:144: (abu keunguan) yang menyatu dengan latar sidebar. */
+resources\views\about.blade.php:32: <p>{{ __('Studio animasi dengan jangkauan kerja sama lokal maupun internasional.') }}</p>
+resources\views\about.blade.php:39: <p>{{ __('Memadukan teknologi dan seni untuk mencari cara kerja yang lebih baik.') }}</p>
+resources\views\about.blade.php:46: <p>{{ __('Di industri animasi, dari serial hingga film layar lebar.') }}</p>

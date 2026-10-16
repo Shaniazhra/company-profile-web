@@ -1,10 +1,10 @@
 <div>
-    <x-input-label for="name" value="Nama Klien" />
+    <x-input-label for="name" value="Client Name" />
     <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $client->name)" required />
     <x-input-error :messages="$errors->get('name')" class="mt-1" />
 </div>
 
-<x-admin.image-field name="logo" label="Logo Klien" :path="$client->logo" :dark="true"
+<x-admin.image-field name="logo" label="Client Logo" :path="$client->logo" :dark="true"
     help="PNG transparan paling baik (logo putih pun aman, latarnya gelap di sini). Maks 2 MB." />
 
 <div>

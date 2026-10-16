@@ -27,7 +27,7 @@ class ClientController extends Controller
     {
         $this->persist($request, new Client);
 
-        return redirect()->route('admin.clients.index')->with('status', 'Klien ditambahkan.');
+        return redirect()->route('admin.clients.index')->with('status', 'Client added.');
     }
 
     public function edit(Client $client)
@@ -39,7 +39,7 @@ class ClientController extends Controller
     {
         $this->persist($request, $client);
 
-        return redirect()->route('admin.clients.index')->with('status', 'Klien diperbarui.');
+        return redirect()->route('admin.clients.index')->with('status', 'Client updated.');
     }
 
     public function destroy(Client $client)
@@ -49,7 +49,7 @@ class ClientController extends Controller
         }
         $client->delete();
 
-        return redirect()->route('admin.clients.index')->with('status', 'Klien dihapus.');
+        return redirect()->route('admin.clients.index')->with('status', 'Client deleted.');
     }
 
     public function move(Request $request, Client $client)

@@ -29,7 +29,7 @@ class ServiceController extends Controller
     {
         $this->persist($request, new Service);
 
-        return redirect()->route('admin.services.index')->with('status', 'Layanan ditambahkan.');
+        return redirect()->route('admin.services.index')->with('status', 'Service added.');
     }
 
     public function edit(Service $service)
@@ -41,7 +41,7 @@ class ServiceController extends Controller
     {
         $this->persist($request, $service);
 
-        return redirect()->route('admin.services.index')->with('status', 'Layanan diperbarui.');
+        return redirect()->route('admin.services.index')->with('status', 'Service updated.');
     }
 
     public function destroy(Service $service)
@@ -51,7 +51,7 @@ class ServiceController extends Controller
         }
         $service->delete();
 
-        return redirect()->route('admin.services.index')->with('status', 'Layanan dihapus.');
+        return redirect()->route('admin.services.index')->with('status', 'Service deleted.');
     }
 
     public function move(Request $request, Service $service)

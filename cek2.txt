@@ -1,0 +1,82 @@
+﻿resources\views\admin\clients\_form.blade.php:21: Tampilkan di website
+resources\views\admin\clients\_form.blade.php:25: <x-admin.button>Simpan</x-admin.button>
+resources\views\admin\clients\_form.blade.php:26: <a href="{{ route('admin.clients.index') }}" class="text-sm text-gray-600 hover:text-gray-900">Batal</a>
+resources\views\admin\projects\index.blade.php:67: <th>Tahun</th>
+resources\views\admin\projects\index.blade.php:68: <th>Urutan</th>
+resources\views\admin\projects\index.blade.php:70: <th>Aksi</th>
+resources\views\admin\projects\index.blade.php:101: {{ $project->is_published ? 'Tayang' : 'Draf' }}
+resources\views\admin\projects\index.blade.php:109: Ubah
+resources\views\admin\projects\index.blade.php:116: <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+resources\views\admin\projects\_form.blade.php:103: <label class="pf-label" for="title_id">Judul <small>(Indonesia, wajib)</small></label>
+resources\views\admin\projects\_form.blade.php:108: <label class="pf-label" for="title_en">Judul <small>(English)</small></label>
+resources\views\admin\projects\_form.blade.php:130: <label class="pf-label" for="release_year">Tahun rilis</label>
+resources\views\admin\projects\_form.blade.php:136: <label class="pf-label" for="sort_order">Urutan <small>(kecil tampil dulu)</small></label>
+resources\views\admin\projects\_form.blade.php:152: <h3>Logo judul <small>(opsional)</small></h3>
+resources\views\admin\projects\_form.blade.php:156: <template x-if="logo && !dropLogo"><img :src="logo" alt="Pratinjau logo judul" class="pf-logo-img"></template>
+resources\views\admin\projects\_form.blade.php:162: <span class="pf-toggle" role="group" aria-label="Latar pratinjau">
+resources\views\admin\projects\_form.blade.php:176: Hapus logo, pakai judul teks saja
+resources\views\admin\projects\_form.blade.php:183: <h3>Sinopsis</h3>
+resources\views\admin\projects\_form.blade.php:217: Hapus gambar saat ini
+resources\views\admin\projects\_form.blade.php:240: <h3>Karakter</h3>
+resources\views\admin\projects\_form.blade.php:256: <span x-text="row.photo_url ? 'Ganti foto' : 'Pilih foto'"></span>
+resources\views\admin\projects\_form.blade.php:260: <button type="button" class="pf-link" x-show="row.photo_url" @click="clearPhoto($event, row)">Hapus foto</button>
+resources\views\admin\projects\_form.blade.php:266: <input type="text" class="pf-input" placeholder="Nama karakter" maxlength="80"
+resources\views\admin\projects\_form.blade.php:267: :name="`characters[${i}][name]`" x-model="row.name" aria-label="Nama karakter">
+resources\views\admin\projects\_form.blade.php:268: <input type="text" class="pf-input" placeholder="Peran (mis. Tokoh utama)" maxlength="120"
+resources\views\admin\projects\_form.blade.php:269: :name="`characters[${i}][role]`" x-model="row.role" aria-label="Peran karakter">
+resources\views\admin\projects\_form.blade.php:271: <button type="button" class="btn btn-danger btn-sm" @click="remove(i)">Hapus</button>
+resources\views\admin\projects\_form.blade.php:283: Tambah karakter
+resources\views\admin\projects\_form.blade.php:294: <a href="{{ route('admin.projects.index') }}" class="btn btn-outline btn-sm">Batal</a>
+resources\views\admin\services\_form.blade.php:3: <x-admin.translatable name="description" label="Deskripsi Lengkap" :model="$service" :rows="5" />
+resources\views\admin\services\_form.blade.php:21: <x-admin.image-field name="image" label="Gambar Contoh Hasil" :path="$service->image"
+resources\views\admin\services\_form.blade.php:28: Tampilkan di website
+resources\views\admin\services\_form.blade.php:32: <x-admin.button>Simpan</x-admin.button>
+resources\views\admin\services\_form.blade.php:33: <a href="{{ route('admin.services.index') }}" class="text-sm text-gray-600 hover:text-gray-900">Batal</a>
+resources\views\admin\site\edit.blade.php:89: ['field' => 'tagline',          'title' => 'Tagline',          'desc' => 'Judul besar di bagian utama (hero) halaman depan.', 'rows' => 1],
+resources\views\admin\site\edit.blade.php:90: ['field' => 'heart_statement',  'title' => 'Heart Statement',  'desc' => 'Kalimat pendukung di bawah judul hero.',            'rows' => 4],
+resources\views\admin\site\edit.blade.php:110: <h3>Nama Situs</h3>
+resources\views\admin\site\edit.blade.php:111: <p>Tampil di judul tab browser, navbar, dan footer.</p>
+resources\views\admin\site\edit.blade.php:115: <x-input-label for="site_name" value="Nama Situs" />
+resources\views\admin\site\edit.blade.php:125: <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+resources\views\admin\site\edit.blade.php:133: <p class="site-group">Gambar</p>
+resources\views\admin\site\edit.blade.php:147: name="hero_image" kind="hero" title="Gambar Latar Hero"
+resources\views\admin\site\edit.blade.php:148: description="Gambar latar bagian utama halaman depan. Kalau kosong, hero memakai gradasi."
+resources\views\admin\site\edit.blade.php:182: <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+resources\views\components\admin\image-upload.blade.php:56: <img :src="preview" alt="Pratinjau {{ $title }}" class="img-up-img">
+resources\views\components\admin\image-upload.blade.php:76: <button type="submit" class="btn btn-primary btn-sm">Unggah</button>
+resources\views\components\admin\image-upload.blade.php:77: <button type="button" class="btn btn-outline btn-sm" @click="cancel()">Batal</button>
+resources\views\components\admin\image-upload.blade.php:104: <button type="submit" form="delete-{{ $name }}" class="btn btn-danger btn-sm" x-show="!preview">Hapus</button>
+resources\views\components\admin\row-actions.blade.php:19: <a href="{{ $edit }}" class="btn btn-outline btn-sm">Ubah</a>
+resources\views\components\admin\row-actions.blade.php:24: <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+resources\views\components\admin\sidebar.blade.php:18: 'Pengaturan' => [
+resources\views\components\admin\sidebar.blade.php:19: ['label' => 'Pengaturan Situs', 'icon' => 'settings', 'route' => 'admin.site.edit', 'match' => ['admin.site.*']],
+resources\views\components\admin\sidebar.blade.php:31: <button type="button" class="adm-close" @click="open = false" aria-label="Tutup menu">
+resources\views\components\admin\sidebar.blade.php:62: <span>Keluar</span>
+resources\views\components\admin-layout.blade.php:47: Font, ukuran teks, radius, dan tombol tetap dari theme.css. */
+resources\views\components\admin-layout.blade.php:56: Ubah tiga baris ini kalau mau menyesuaikan warnanya. */
+resources\views\components\admin-layout.blade.php:144: (abu keunguan) yang menyatu dengan latar sidebar. */
+resources\views\components\brand-logo.blade.php:3: 'brand' => null,    // opsional, kalau nama brand mau di-override
+resources\views\components\brand-logo.blade.php:5: 'name'  => true,    // false = logo saja tanpa nama
+resources\views\components\brand-logo.blade.php:6: 'sub'   => null,    // teks kecil di bawah nama, mis. "Panel Admin"
+resources\views\about.blade.php:9: <span class="eyebrow">{{ __('Siapa Kami') }}</span>
+resources\views\about.blade.php:45: <h4>{{ __('Pengalaman puluhan tahun') }}</h4>
+app\Config\admin-navigation.php:18: ['label' => 'Layanan', 'route' => 'admin.services.index', 'match' => 'admin.services.*', 'icon' => 'services'],
+app\Config\admin-navigation.php:19: ['label' => 'Proyek', 'route' => 'admin.projects.index', 'match' => 'admin.projects.*', 'icon' => 'projects'],
+app\Config\admin-navigation.php:20: ['label' => 'Klien', 'route' => 'admin.clients.index', 'match' => 'admin.clients.*', 'icon' => 'clients'],
+app\Config\admin-navigation.php:25: 'group' => 'Pengaturan',
+app\Config\admin-navigation.php:27: ['label' => 'Pengaturan Situs', 'route' => 'admin.site.edit', 'match' => 'admin.site.*', 'icon' => 'settings'],
+app\Http\Controllers\Admin\ProjectController.php:80: return back()->with('status', $project->is_published ? 'Proyek ditayangkan.' : 'Proyek diubah jadi draf.');
+app\Http\Controllers\Admin\ProjectController.php:103: 'title.id.required' => 'Judul (Indonesia) wajib diisi.',
+app\Http\Controllers\Admin\ProjectController.php:106: 'image.image'       => 'File harus berupa gambar.',
+app\Http\Controllers\Admin\ProjectController.php:108: 'image.max'         => 'Ukuran gambar maksimal 5 MB.',
+app\Http\Controllers\Admin\ProjectController.php:110: 'logo.image'        => 'Logo harus berupa gambar.',
+app\Http\Controllers\Admin\ProjectController.php:114: 'characters.*.photo_file.image'    => 'Foto karakter harus berupa gambar.',
+app\Http\Controllers\Admin\ProjectController.php:116: 'characters.*.photo_file.max'      => 'Ukuran foto karakter maksimal 2 MB.',
+app\Http\Controllers\Admin\ProjectController.php:119: 'title.en' => 'judul (English)', 'tag.id' => 'tag (Indonesia)', 'tag.en' => 'tag (English)',
+app\Http\Controllers\Admin\ProjectController.php:120: 'synopsis.id' => 'sinopsis (Indonesia)', 'synopsis.en' => 'sinopsis (English)',
+app\Http\Controllers\Admin\ProjectController.php:121: 'release_year' => 'tahun rilis', 'sort_order' => 'urutan',
+app\Http\Controllers\Admin\ProjectController.php:122: 'characters.*.name' => 'nama karakter', 'characters.*.role' => 'peran karakter',
+app\Http\Controllers\Admin\SiteSettingController.php:25: 'hero_image' => ['label' => 'Gambar hero', 'max' => 5120],
+app\Http\Controllers\Admin\SiteSettingController.php:79: "$field.required" => 'Pilih file gambar terlebih dahulu.',
+app\Http\Controllers\Admin\SiteSettingController.php:80: "$field.image" => 'File harus berupa gambar.',
+app\Support\Icons.php:19: 'user'    => ['Karakter', '<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>'],

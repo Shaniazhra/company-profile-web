@@ -43,7 +43,7 @@ class SiteSettingController extends Controller
         $site->site_name = $data['site_name'];
         $site->save();
 
-        return $this->saved('name', 'Nama situs disimpan.');
+        return $this->saved('name', 'Site name saved.');
     }
 
     /** Simpan satu teks (dua bahasa) saja. */
@@ -62,7 +62,7 @@ class SiteSettingController extends Controller
         $site->setTranslations($field, AdminForm::clean($data[$field] ?? []));
         $site->save();
 
-        return $this->saved($field, 'Teks disimpan.');
+        return $this->saved($field, 'Text saved.');
     }
 
     /** Unggah logo atau gambar hero. File lama otomatis dihapus. */
@@ -78,9 +78,9 @@ class SiteSettingController extends Controller
         ], [
             "$field.required" => 'Pilih file gambar terlebih dahulu.',
             "$field.image" => 'File harus berupa gambar.',
-            "$field.mimes" => 'Format harus PNG, JPG, atau WebP.',
+            "$field.mimes" => 'The file must be a PNG, JPG, or WebP image.',
             "$field.max" => "Ukuran file maksimal {$limitMb} MB.",
-            "$field.uploaded" => 'Unggahan gagal. Ukuran file kemungkinan melebihi batas server (upload_max_filesize di php.ini).',
+            "$field.uploaded" => 'Upload failed. The file may exceed the server limit (upload_max_filesize in php.ini).',
         ]);
 
         $site = SiteSetting::current();
@@ -89,7 +89,7 @@ class SiteSettingController extends Controller
         $site->{$field} = $request->file($field)->store('site', 'public');
         $site->save();
 
-        return $this->saved($field, $info['label'].' berhasil diunggah.');
+        return $this->saved($field, $info['label'].' uploaded.');
     }
 
     /** Hapus logo atau gambar hero. */
@@ -103,7 +103,7 @@ class SiteSettingController extends Controller
         $site->{$field} = null;
         $site->save();
 
-        return $this->saved($field, self::IMAGES[$field]['label'].' dihapus.');
+        return $this->saved($field, self::IMAGES[$field]['label'].' removed.');
     }
 
     private function deleteFile(?string $path): void

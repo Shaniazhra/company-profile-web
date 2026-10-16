@@ -4,12 +4,12 @@
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="mb-4 flex flex-wrap items-center justify-between gap-3 px-4 sm:px-0">
                 <div>
-                    <h1 class="text-xl font-semibold text-gray-800">Layanan</h1>
-                    <p class="text-sm text-gray-500">Skill animasi yang ditampilkan ke calon klien. Urutan di sini sama dengan urutan di website.</p>
+                    <h1 class="text-xl font-semibold text-gray-800">Services</h1>
+                    <p class="text-sm text-gray-500">Animation skills shown to potential clients. The order here matches the order on the website.</p>
                 </div>
                 <a href="{{ route('admin.services.create') }}"
                    class="btn btn-primary">
-                    + Tambah Layanan
+                    + Add Service
                 </a>
             </div>
 
@@ -27,8 +27,8 @@
                         @endif
 
                         <div class="min-w-0 flex-1">
-                            <p class="truncate font-medium text-gray-800">{{ $service->getTranslation('title', 'id') }}</p>
-                            <p class="truncate text-sm text-gray-500">{{ $service->getTranslation('summary', 'id', false) ?: 'Belum ada ringkasan' }}</p>
+                            <p class="truncate font-medium text-gray-800">{{ $service->getTranslation('title', 'en') }}</p>
+                            <p class="truncate text-sm text-gray-500">{{ $service->getTranslation('summary', 'en', false) ?: 'No summary yet' }}</p>
                         </div>
 
                         <span class="rounded-full px-3 py-1 text-xs font-medium {{ $service->is_active ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-500' }}">
@@ -40,10 +40,10 @@
                             :edit="route('admin.services.edit', $service)"
                             :delete="route('admin.services.destroy', $service)"
                             :first="$loop->first" :last="$loop->last"
-                            confirm="Hapus layanan ini? Gambarnya juga ikut terhapus." />
+                            confirm="Delete this service? Its image will be deleted too." />
                     </div>
                 @empty
-                    <p class="p-8 text-center text-gray-500">Belum ada layanan. Klik "Tambah Layanan" untuk memulai.</p>
+                    <p class="p-8 text-center text-gray-500">No services yet. Click "Add Service" to get started.</p>
                 @endforelse
             </div>
         </div>

@@ -1,4 +1,4 @@
-@props(['edit', 'delete', 'move' => null, 'first' => false, 'last' => false, 'confirm' => 'Hapus item ini? Tindakan ini tidak bisa dibatalkan.'])
+@props(['edit', 'delete', 'move' => null, 'first' => false, 'last' => false, 'confirm' => 'Delete this item? This action cannot be undone.'])
 
 <div class="flex items-center gap-2">
     @if ($move)

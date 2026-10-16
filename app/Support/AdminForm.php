@@ -7,15 +7,15 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminForm
 {
-    /** Bahasa yang tersedia di form admin. Tambah di sini kalau ada bahasa baru. */
-    public const LOCALES = ['id' => 'Indonesia', 'en' => 'English'];
+    /** Languages available in the admin forms. Add one here to support another language. */
+    public const LOCALES = ['en' => 'English'];
 
     public static function imageRules(): array
     {
         return ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'];
     }
 
-    /** Aturan validasi untuk satu field multi-bahasa. Bahasa pertama (id) wajib jika $required. */
+    /** Aturan validasi untuk satu field multi-bahasa. The first language (en) is required when $required is true. */
     public static function translationRules(string $field, bool $required = false, int $max = 2000): array
     {
         $rules = [$field => [$required ? 'required' : 'nullable', 'array']];

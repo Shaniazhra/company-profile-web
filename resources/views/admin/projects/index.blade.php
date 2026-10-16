@@ -35,12 +35,12 @@
     <div class="pa">
         <div class="pa-head">
             <div>
-                <h2>Proyek</h2>
-                <p>Proyek dengan urutan paling kecil jadi proyek unggulan di beranda.</p>
+                <h2>Projects</h2>
+                <p>The project with the lowest order becomes the featured project on the home page.</p>
             </div>
             <a href="{{ route('admin.projects.create') }}" class="btn btn-primary btn-sm">
                 <x-admin.icon name="plus" />
-                Tambah proyek
+                Add project
             </a>
         </div>
 
@@ -51,10 +51,10 @@
         <section class="pa-card">
             @if ($projects->isEmpty())
                 <div class="pa-empty">
-                    <p>Belum ada proyek.</p>
+                    <p>No projects yet.</p>
                     <a href="{{ route('admin.projects.create') }}" class="btn btn-outline btn-sm">
                         <x-admin.icon name="plus" />
-                        Tambah proyek pertama
+                        Add the first project
                     </a>
                 </div>
             @else
@@ -62,7 +62,7 @@
                     <table class="pa-table">
                         <thead>
                             <tr>
-                                <th>Proyek</th>
+                                <th>Project</th>
                                 <th>Tag</th>
                                 <th>Tahun</th>
                                 <th>Urutan</th>
@@ -72,7 +72,7 @@
                         </thead>
                         <tbody>
                             @foreach ($projects as $project)
-                                @php $title = $project->getTranslation('title', 'id', false); @endphp
+                                @php $title = $project->getTranslation('title', 'en', false); @endphp
                                 <tr>
                                     <td>
                                         <div class="pa-title">
@@ -89,7 +89,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{ $project->getTranslation('tag', 'id', false) ?: '-' }}</td>
+                                    <td>{{ $project->getTranslation('tag', 'en', false) ?: '-' }}</td>
                                     <td>{{ $project->release_year ?: '-' }}</td>
                                     <td>{{ $project->sort_order }}</td>
                                     <td>
@@ -97,7 +97,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <button type="submit" class="pa-status {{ $project->is_published ? 'is-live' : '' }}"
-                                                    title="Klik untuk mengubah status">
+                                                    title="Click to change status">
                                                 {{ $project->is_published ? 'Tayang' : 'Draf' }}
                                             </button>
                                         </form>
@@ -110,7 +110,7 @@
                                             </a>
 
                                             <form method="POST" action="{{ route('admin.projects.destroy', $project) }}"
-                                                  onsubmit="return confirm({{ \Illuminate\Support\Js::from('Hapus proyek "'.$title.'"? Tindakan ini tidak bisa dibatalkan.') }})">
+                                                  onsubmit="return confirm({{ \Illuminate\Support\Js::from('Delete project "'.$title.'"? This action cannot be undone.') }})">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">Hapus</button>

@@ -11,14 +11,14 @@ use App\Http\Middleware\SetLocale;
 use Illuminate\Support\Facades\Route;
 
 /* ---------- Situs publik (tamu, ada prefix bahasa) ---------- */
-Route::get('/', fn () => redirect()->route('home', ['locale' => 'id']));
+Route::get('/', fn () => redirect()->route('home', ['locale' => 'en']));
 
 Route::prefix('{locale}')
-    ->where(['locale' => 'id|en'])
+    ->where(['locale' => 'en'])
     ->middleware(SetLocale::class)
     ->group(function () {
         Route::get('/', [HomeController::class, 'index'])->name('home');
-        Route::view('/tentang-kami', 'about')->name('about');
+        Route::view('/about', 'about')->name('about');
 
         // Aktifkan setelah PipelineController dibuat:
         // Route::get('/alur-produksi', [\App\Http\Controllers\PipelineController::class, 'index'])->name('pipeline');

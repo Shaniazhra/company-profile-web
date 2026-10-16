@@ -1,4 +1,4 @@
-<x-admin.translatable name="title" label="Judul Layanan" :model="$service" />
+<x-admin.translatable name="title" label="Service Title" :model="$service" />
 <x-admin.translatable name="summary" label="Ringkasan (1-2 kalimat, tampil di kartu)" :model="$service" :rows="2" />
 <x-admin.translatable name="description" label="Deskripsi Lengkap" :model="$service" :rows="5" />
 
@@ -19,7 +19,7 @@
 </fieldset>
 
 <x-admin.image-field name="image" label="Gambar Contoh Hasil" :path="$service->image"
-    help="Cuplikan hasil animasi untuk layanan ini (landscape 16:9 paling pas), maks 2 MB." />
+    help="A preview of the animation result for this service (16:9 landscape fits best), max 2 MB." />
 
 <label class="flex items-center gap-2 text-sm text-gray-700">
     <input type="hidden" name="is_active" value="0">

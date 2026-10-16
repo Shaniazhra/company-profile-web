@@ -29,21 +29,21 @@
                     <span class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span>
                     <div>
                         <h4>{{ __('Berbasis di Jakarta, Indonesia') }}</h4>
-                        <p>{{ __('Studio animasi dengan jangkauan kerja sama lokal maupun internasional.') }}</p>
+                        <p>{{ __('An animation studio working with local and international partners.') }}</p>
                     </div>
                 </li>
                 <li>
                     <span class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span>
                     <div>
                         <h4>{{ __('Tim R&D kreatif') }}</h4>
-                        <p>{{ __('Memadukan teknologi dan seni untuk mencari cara kerja yang lebih baik.') }}</p>
+                        <p>{{ __('Combining technology and art to find better ways of working.') }}</p>
                     </div>
                 </li>
                 <li>
                     <span class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span>
                     <div>
                         <h4>{{ __('Pengalaman puluhan tahun') }}</h4>
-                        <p>{{ __('Di industri animasi, dari serial hingga film layar lebar.') }}</p>
+                        <p>{{ __('In the animation industry, from series to feature films.') }}</p>
                     </div>
                 </li>
             </ul>

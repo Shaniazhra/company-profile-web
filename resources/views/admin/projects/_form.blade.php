@@ -81,13 +81,13 @@
 
 <div class="pf">
     <div class="pf-head">
-        <h2>{{ $project->exists ? 'Ubah proyek' : 'Tambah proyek' }}</h2>
+        <h2>{{ $project->exists ? 'Edit project' : 'Add project' }}</h2>
         <p>Isi versi Indonesia dulu. Versi English boleh dikosongkan.</p>
     </div>
 
     <form method="POST" action="{{ $action }}" enctype="multipart/form-data" class="pf-form"
           x-data="{
-              title: @js(old('title.id', $project->getTranslation('title', 'id', false))),
+              title: @js(old('title.id', $project->getTranslation('title', 'en', false))),
               logo: @js($project->logo ? asset('storage/'.$project->logo) : null),
               dropLogo: false
           }">
@@ -114,7 +114,7 @@
                 <div>
                     <label class="pf-label" for="tag_id">Tag <small>(Indonesia, mis. Season 2)</small></label>
                     <input id="tag_id" name="tag[id]" type="text" class="pf-input" maxlength="80"
-                           value="{{ old('tag.id', $project->getTranslation('tag', 'id', false)) }}">
+                           value="{{ old('tag.id', $project->getTranslation('tag', 'en', false)) }}">
                     @error('tag.id')<p class="pf-error">{{ $message }}</p>@enderror
                 </div>
                 <div>
@@ -150,15 +150,15 @@
         {{-- ===== LOGO JUDUL ===== --}}
         <section class="pf-card" x-data="{ dark: false }">
             <h3>Logo judul <small>(opsional)</small></h3>
-            <p class="pf-hint">Kalau logo diisi, logo yang tampil sebagai judul di website. Kalau kosong, yang tampil judul teks di atas.</p>
+            <p class="pf-hint">If a logo is set, the logo is shown as the title on the website. If empty, the text title above is shown.</p>
 
             <div class="pf-logo-stage" :class="{ 'is-dark': dark }">
                 <template x-if="logo && !dropLogo"><img :src="logo" alt="Pratinjau logo judul" class="pf-logo-img"></template>
-                <span class="pf-logo-text" x-show="!logo || dropLogo" x-text="title.trim() || 'Judul belum diisi'"></span>
+                <span class="pf-logo-text" x-show="!logo || dropLogo" x-text="title.trim() || 'Title not set yet'"></span>
             </div>
 
             <div class="pf-logo-meta">
-                <span x-text="logo && !dropLogo ? 'Yang tampil di website: logo' : 'Yang tampil di website: judul teks'"></span>
+                <span x-text="logo && !dropLogo ? 'Shown on the website: logo' : 'Shown on the website: text title'"></span>
                 <span class="pf-toggle" role="group" aria-label="Latar pratinjau">
                     <button type="button" :class="{ 'is-on': !dark }" @click="dark = false">Latar terang</button>
                     <button type="button" :class="{ 'is-on': dark }" @click="dark = true">Latar gelap</button>
@@ -181,12 +181,12 @@
         {{-- ===== SINOPSIS ===== --}}
         <section class="pf-card">
             <h3>Sinopsis</h3>
-            <p class="pf-hint">Tampil di halaman detail proyek.</p>
+            <p class="pf-hint">Shown on the project detail page.</p>
 
             <div class="pf-grid">
                 <div>
                     <label class="pf-label" for="synopsis_id">Indonesia</label>
-                    <textarea id="synopsis_id" name="synopsis[id]" class="pf-input" maxlength="5000">{{ old('synopsis.id', $project->getTranslation('synopsis', 'id', false)) }}</textarea>
+                    <textarea id="synopsis_id" name="synopsis[id]" class="pf-input" maxlength="5000">{{ old('synopsis.id', $project->getTranslation('synopsis', 'en', false)) }}</textarea>
                     @error('synopsis.id')<p class="pf-error">{{ $message }}</p>@enderror
                 </div>
                 <div>
@@ -199,12 +199,12 @@
 
         {{-- ===== GAMBAR ===== --}}
         <section class="pf-card" x-data="{ preview: @js($project->image ? asset('storage/'.$project->image) : null), removed: false }">
-            <h3>Gambar proyek</h3>
-            <p class="pf-hint">PNG, JPG, atau WebP, maksimal 5 MB. Disarankan rasio 16:9.</p>
+            <h3>Project image</h3>
+            <p class="pf-hint">PNG, JPG, or WebP, max 5 MB. A 16:9 ratio is recommended.</p>
 
             <div class="pf-image" style="margin-top: 1rem">
-                <template x-if="preview && !removed"><img :src="preview" alt="Pratinjau gambar proyek"></template>
-                <span x-show="!preview || removed">Belum ada gambar</span>
+                <template x-if="preview && !removed"><img :src="preview" alt="Project image preview"></template>
+                <span x-show="!preview || removed">No image yet</span>
             </div>
 
             <input type="file" name="image" accept="image/png,image/jpeg,image/webp" class="pf-file"
@@ -238,9 +238,9 @@
                     }
                  }">
             <h3>Karakter</h3>
-            <p class="pf-hint">Daftar karakter dalam animasi ini, lengkap dengan foto (maks. 2 MB per foto). Baris tanpa nama diabaikan.</p>
+            <p class="pf-hint">The characters in this animation, with photos (max 2 MB each). Rows without a name are ignored.</p>
 
-            <p class="pf-empty" x-show="rows.length === 0">Belum ada karakter.</p>
+            <p class="pf-empty" x-show="rows.length === 0">No characters yet.</p>
 
             <div class="pf-chars">
                 <template x-for="(row, i) in rows" :key="row.uid">
@@ -292,7 +292,7 @@
             </label>
 
             <a href="{{ route('admin.projects.index') }}" class="btn btn-outline btn-sm">Batal</a>
-            <button type="submit" class="btn btn-primary btn-sm">{{ $project->exists ? 'Simpan perubahan' : 'Simpan proyek' }}</button>
+            <button type="submit" class="btn btn-primary btn-sm">{{ $project->exists ? 'Save changes' : 'Save project' }}</button>
         </div>
     </form>
 </div>

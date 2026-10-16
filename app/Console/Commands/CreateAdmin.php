@@ -11,7 +11,7 @@ class CreateAdmin extends Command
 {
     protected $signature = 'admin:create {email=admin@dreamratio.test} {--name=Admin} {--password=}';
 
-    protected $description = 'Buat atau perbarui akun admin';
+    protected $description = 'Create or update the admin account';
 
     public function handle(): int
     {
@@ -28,7 +28,7 @@ class CreateAdmin extends Command
 
         $this->info("Akun admin siap: {$email}");
         $this->line("Password: {$password}");
-        $this->warn('Simpan password ini sekarang, tidak akan ditampilkan lagi.');
+        $this->warn('Save this password now. It will not be shown again.');
 
         return self::SUCCESS;
     }

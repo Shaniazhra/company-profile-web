@@ -59,10 +59,10 @@
             @if ($path)
                 <img x-show="!preview" src="{{ asset('storage/'.$path) }}" alt="{{ $title }}" class="img-up-img">
             @else
-                <p x-show="!preview" class="img-up-empty">Belum ada gambar</p>
+                <p x-show="!preview" class="img-up-empty">No image yet</p>
             @endif
 
-            <span x-show="preview" x-cloak class="img-up-badge">Pratinjau, belum diunggah</span>
+            <span x-show="preview" x-cloak class="img-up-badge">Preview, not uploaded yet</span>
         </div>
 
         {{-- Form unggah: tombol Unggah dan Batal baru muncul setelah file dipilih --}}
@@ -97,7 +97,7 @@
 
         @if ($path)
             <form id="delete-{{ $name }}" method="POST" action="{{ $deleteRoute }}"
-                  onsubmit="return confirm('Hapus gambar ini dari website?')">
+                  onsubmit="return confirm('Remove this image from the website?')">
                 @csrf
                 @method('DELETE')
             </form>

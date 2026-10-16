@@ -6,12 +6,12 @@
     // Judul halaman otomatis dari route, kecuali diberi title="..." manual.
     $title ??= match (true) {
         request()->routeIs('admin.index') => 'Dashboard',
-        request()->routeIs('admin.site.*') => 'Pengaturan Situs',
-        request()->routeIs('admin.services.*') => 'Layanan',
-        request()->routeIs('admin.projects.*') => 'Proyek',
-        request()->routeIs('admin.clients.*') => 'Klien',
-        request()->routeIs('admin.team.*', 'admin.divisions.*', 'admin.members.*') => 'Tim',
-        request()->routeIs('profile.*') => 'Profil',
+        request()->routeIs('admin.site.*') => 'Site Settings',
+        request()->routeIs('admin.services.*') => 'Services',
+        request()->routeIs('admin.projects.*') => 'Projects',
+        request()->routeIs('admin.clients.*') => 'Clients',
+        request()->routeIs('admin.team.*', 'admin.divisions.*', 'admin.members.*') => 'Team',
+        request()->routeIs('profile.*') => 'Profile',
         default => 'Admin',
     };
 
@@ -228,7 +228,7 @@
         {{-- Konten --}}
         <div class="adm-main">
             <header class="adm-topbar">
-                <button type="button" class="adm-iconbtn" aria-label="Buka atau tutup menu"
+                <button type="button" class="adm-iconbtn" aria-label="Open or close menu"
                         @click="window.matchMedia('(min-width: 1024px)').matches ? collapsed = !collapsed : open = !open">
                     <x-admin.icon name="menu" class="h-6 w-6" />
                 </button>

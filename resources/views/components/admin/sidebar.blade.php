@@ -10,9 +10,9 @@
             ['label' => 'Dashboard', 'icon' => 'dashboard', 'route' => 'admin.index', 'match' => ['admin.index']],
         ],
         'Konten Website' => [
-            ['label' => 'Layanan', 'icon' => 'services', 'route' => 'admin.services.index', 'match' => ['admin.services.*']],
-            ['label' => 'Proyek',  'icon' => 'projects', 'route' => 'admin.projects.index', 'match' => ['admin.projects.*']],
-            ['label' => 'Klien',   'icon' => 'clients',  'route' => 'admin.clients.index',  'match' => ['admin.clients.*']],
+            ['label' => 'Services', 'icon' => 'services', 'route' => 'admin.services.index', 'match' => ['admin.services.*']],
+            ['label' => 'Projects',  'icon' => 'projects', 'route' => 'admin.projects.index', 'match' => ['admin.projects.*']],
+            ['label' => 'Clients',   'icon' => 'clients',  'route' => 'admin.clients.index',  'match' => ['admin.clients.*']],
             ['label' => 'Tim',     'icon' => 'team',     'route' => 'admin.team.index',     'match' => ['admin.team.*', 'admin.divisions.*', 'admin.members.*']],
         ],
         'Pengaturan' => [

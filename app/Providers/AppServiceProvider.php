@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
         $site = null;
 
         View::composer(
-            ['layouts.site', 'partials.*', 'welcome', 'about', 'pipeline', 'contact'],
+            ['layouts.site', 'partials.*', 'welcome', 'about', 'projects'],
             function ($view) use (&$site) {
                 $site ??= SiteSetting::first() ?? new SiteSetting;
 

@@ -88,14 +88,14 @@
         $texts = [
             ['field' => 'tagline',          'title' => 'Tagline',          'desc' => 'Judul besar di bagian utama (hero) halaman depan.', 'rows' => 1],
             ['field' => 'heart_statement',  'title' => 'Heart Statement',  'desc' => 'Kalimat pendukung di bawah judul hero.',            'rows' => 4],
-            ['field' => 'impact_statement', 'title' => 'Impact Statement', 'desc' => 'Pernyataan dampak di halaman depan dan Tentang Kami.', 'rows' => 4],
-            ['field' => 'about_text',       'title' => 'Teks Tentang Kami', 'desc' => 'Deskripsi studio di halaman Tentang Kami.',        'rows' => 6],
+            ['field' => 'impact_statement', 'title' => 'Impact Statement', 'desc' => 'Impact statement shown on the home page and the About page.', 'rows' => 4],
+            ['field' => 'about_text',       'title' => 'About Text', 'desc' => 'Studio description on the About page.',        'rows' => 6],
         ];
     @endphp
 
     <div class="site-page">
 
-        <p class="site-intro">Setiap bagian disimpan sendiri, jadi kamu bisa mengubah satu bagian tanpa mengisi yang lain.</p>
+        <p class="site-intro">Each section is saved on its own, so you can change one section without filling in the others.</p>
 
         {{-- ===== Identitas ===== --}}
         <div>
@@ -135,7 +135,7 @@
             <div class="site-grid site-grid--2">
                 <x-admin.image-upload
                     name="logo" kind="logo" title="Logo"
-                    description="Tampil di navbar dan footer. Kalau kosong, nama situs yang tampil."
+                    description="Shown in the navbar and footer. If empty, the site name is shown."
                     :path="$site->logo"
                     :upload-route="route('admin.site.image.upload', 'logo')"
                     :delete-route="route('admin.site.image.destroy', 'logo')"
@@ -150,7 +150,7 @@
                     :upload-route="route('admin.site.image.upload', 'hero_image')"
                     :delete-route="route('admin.site.image.destroy', 'hero_image')"
                     :max-mb="5" :dark="true"
-                    help="Foto landscape, lebar minimal 1600 px, maksimal 5 MB. Bagian kiri sebaiknya tidak terlalu ramai agar teks terbaca."
+                    help="Landscape photo, at least 1600 px wide, max 5 MB. Keep the left side uncluttered so the text stays readable."
                     :message="$flash('hero_image')" />
             </div>
         </div>

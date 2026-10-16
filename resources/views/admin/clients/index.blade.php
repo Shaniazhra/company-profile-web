@@ -4,12 +4,12 @@
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="mb-4 flex flex-wrap items-center justify-between gap-3 px-4 sm:px-0">
                 <div>
-                    <h1 class="text-xl font-semibold text-gray-800">Klien</h1>
-                    <p class="text-sm text-gray-500">Logo klien yang tampil di bagian "Dipercaya oleh".</p>
+                    <h1 class="text-xl font-semibold text-gray-800">Clients</h1>
+                    <p class="text-sm text-gray-500">Client logos shown in the "Our clients" section.</p>
                 </div>
                 <a href="{{ route('admin.clients.create') }}"
                    class="btn btn-primary">
-                    + Tambah Klien
+                    + Add Client
                 </a>
             </div>
 
@@ -42,10 +42,10 @@
                             :edit="route('admin.clients.edit', $client)"
                             :delete="route('admin.clients.destroy', $client)"
                             :first="$loop->first" :last="$loop->last"
-                            confirm="Hapus klien ini? Logonya juga ikut terhapus." />
+                            confirm="Delete this client? Its logo will be deleted too." />
                     </div>
                 @empty
-                    <p class="p-8 text-center text-gray-500">Belum ada klien. Klik "Tambah Klien" untuk memulai.</p>
+                    <p class="p-8 text-center text-gray-500">No clients yet. Click "Add Client" to get started.</p>
                 @endforelse
             </div>
         </div>

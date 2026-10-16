@@ -1,12 +1,12 @@
 @php
     $firstName = \Illuminate\Support\Str::of(auth()->user()->name)->before(' ');
-    $siteUrl   = route('home', ['locale' => 'id']);
+    $siteUrl   = route('home', ['locale' => 'en']);
 
     $stats = [
-        ['label' => 'Layanan',     'icon' => 'services', 'route' => 'admin.services.index', 'total' => $counts['services']['total'], 'note' => $counts['services']['live'].' tampil'],
-        ['label' => 'Proyek',      'icon' => 'projects', 'route' => 'admin.projects.index', 'total' => $counts['projects']['total'], 'note' => $counts['projects']['live'].' tayang'],
-        ['label' => 'Klien',       'icon' => 'clients',  'route' => 'admin.clients.index',  'total' => $counts['clients']['total'],  'note' => $counts['clients']['live'].' tampil'],
-        ['label' => 'Anggota Tim', 'icon' => 'team',     'route' => 'admin.team.index',     'total' => $counts['members']['total'],  'note' => $counts['divisions'].' divisi', 'featured' => true],
+        ['label' => 'Services',     'icon' => 'services', 'route' => 'admin.services.index', 'total' => $counts['services']['total'], 'note' => $counts['services']['live'].' shown'],
+        ['label' => 'Projects',      'icon' => 'projects', 'route' => 'admin.projects.index', 'total' => $counts['projects']['total'], 'note' => $counts['projects']['live'].' live'],
+        ['label' => 'Clients',       'icon' => 'clients',  'route' => 'admin.clients.index',  'total' => $counts['clients']['total'],  'note' => $counts['clients']['live'].' shown'],
+        ['label' => 'Team Members', 'icon' => 'team',     'route' => 'admin.team.index',     'total' => $counts['members']['total'],  'note' => $counts['divisions'].' divisions', 'featured' => true],
     ];
 @endphp
 
@@ -140,7 +140,7 @@
         {{-- ===== KEPALA ===== --}}
         <div class="dash-head">
             <div>
-                <h2>Halo, {{ $firstName }}</h2>
+                <h2>Hello, {{ $firstName }}</h2>
                 <p>{{ now()->translatedFormat('l, d F Y') }}</p>
             </div>
 
@@ -148,18 +148,18 @@
                 @if (Route::has('admin.projects.create'))
                     <a href="{{ route('admin.projects.create') }}" class="btn btn-primary btn-sm">
                         <x-admin.icon name="plus" />
-                        Tambah proyek
+                        Add project
                     </a>
                 @endif
                 <a href="{{ $siteUrl }}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">
-                    Buka website
+                    Open website
                     <x-admin.icon name="external" />
                 </a>
             </div>
         </div>
 
         {{-- ===== KARTU ANGKA ===== --}}
-        <section class="dash-stats" aria-label="Ringkasan konten">
+        <section class="dash-stats" aria-label="Content summary">
             @foreach ($stats as $stat)
                 @php
                     $linked = Route::has($stat['route']);
@@ -171,7 +171,7 @@
                     <div>
                         <p class="dash-stat-value">{{ $stat['total'] }}</p>
                         <p class="dash-stat-label">{{ $stat['label'] }}</p>
-                        <p class="dash-stat-note">{{ $linked ? $stat['note'] : 'Segera hadir' }}</p>
+                        <p class="dash-stat-note">{{ $linked ? $stat['note'] : 'Coming soon' }}</p>
                     </div>
                     <x-admin.icon :name="$stat['icon']" class="dash-stat-icon" />
                 </{{ $tag }}>
@@ -183,10 +183,10 @@
             {{-- ===== PROYEK TERBARU ===== --}}
             <section class="dash-panel">
                 <div class="dash-panel-head">
-                    <h3>Proyek Terbaru</h3>
+                    <h3>Latest Projects</h3>
                     @if (Route::has('admin.projects.index'))
                         <a href="{{ route('admin.projects.index') }}" class="btn btn-primary btn-sm">
-                            Lihat semua
+                            View all
                             <x-admin.icon name="arrow" />
                         </a>
                     @endif
@@ -194,11 +194,11 @@
 
                 @if ($projects->isEmpty())
                     <div class="dash-empty">
-                        <p>Belum ada proyek.</p>
+                        <p>No projects yet.</p>
                         @if (Route::has('admin.projects.create'))
                             <a href="{{ route('admin.projects.create') }}" class="btn btn-outline btn-sm">
                                 <x-admin.icon name="plus" />
-                                Tambah proyek
+                                Add project
                             </a>
                         @endif
                     </div>
@@ -206,21 +206,21 @@
                     <table class="dash-table">
                         <thead>
                             <tr>
-                                <th>Judul Proyek</th>
+                                <th>Project Title</th>
                                 <th>Tag</th>
-                                <th>Tahun</th>
+                                <th>Year</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($projects as $project)
                                 <tr>
-                                    <td class="dash-project-title" data-label="Judul">{{ $project->getTranslation('title', 'id') }}</td>
-                                    <td data-label="Tag">{{ $project->getTranslation('tag', 'id') ?: '-' }}</td>
-                                    <td data-label="Tahun">{{ $project->release_year ?: '-' }}</td>
+                                    <td class="dash-project-title" data-label="Title">{{ $project->getTranslation('title', 'en') }}</td>
+                                    <td data-label="Tag">{{ $project->getTranslation('tag', 'en') ?: '-' }}</td>
+                                    <td data-label="Year">{{ $project->release_year ?: '-' }}</td>
                                     <td data-label="Status">
                                         <span class="dash-status {{ $project->is_published ? 'is-live' : 'is-draft' }}">
-                                            {{ $project->is_published ? 'Tayang' : 'Draf' }}
+                                            {{ $project->is_published ? 'Live' : 'Draftt' }}
                                         </span>
                                     </td>
                                 </tr>
@@ -233,10 +233,10 @@
             {{-- ===== KLIEN TERBARU ===== --}}
             <section class="dash-panel">
                 <div class="dash-panel-head">
-                    <h3>Klien Terbaru</h3>
+                    <h3>Latest Clients</h3>
                     @if (Route::has('admin.clients.index'))
                         <a href="{{ route('admin.clients.index') }}" class="btn btn-primary btn-sm">
-                            Lihat semua
+                            View all
                             <x-admin.icon name="arrow" />
                         </a>
                     @endif
@@ -255,18 +255,18 @@
                         <div class="dash-person-text">
                             <p class="dash-person-name">{{ $client->name }}</p>
                             <p class="dash-person-sub">
-                                {{ $client->website_url ? parse_url($client->website_url, PHP_URL_HOST) : 'Tanpa website' }}
+                                {{ $client->website_url ? parse_url($client->website_url, PHP_URL_HOST) : 'No website' }}
                             </p>
                         </div>
 
                         <div class="dash-person-actions">
                             @if (Route::has('admin.clients.edit'))
-                                <a href="{{ route('admin.clients.edit', $client) }}" class="dash-iconlink" aria-label="Ubah {{ $client->name }}">
+                                <a href="{{ route('admin.clients.edit', $client) }}" class="dash-iconlink" aria-label="Edit {{ $client->name }}">
                                     <x-admin.icon name="edit" />
                                 </a>
                             @endif
                             @if ($client->website_url)
-                                <a href="{{ $client->website_url }}" target="_blank" rel="noopener" class="dash-iconlink" aria-label="Buka website {{ $client->name }}">
+                                <a href="{{ $client->website_url }}" target="_blank" rel="noopener" class="dash-iconlink" aria-label="Open website {{ $client->name }}">
                                     <x-admin.icon name="link" />
                                 </a>
                             @endif
@@ -274,11 +274,11 @@
                     </div>
                 @empty
                     <div class="dash-empty">
-                        <p>Belum ada klien.</p>
+                        <p>No clients yet.</p>
                         @if (Route::has('admin.clients.create'))
                             <a href="{{ route('admin.clients.create') }}" class="btn btn-outline btn-sm">
                                 <x-admin.icon name="plus" />
-                                Tambah klien
+                                Add client
                             </a>
                         @endif
                     </div>

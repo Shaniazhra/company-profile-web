@@ -87,7 +87,7 @@
 
     <form method="POST" action="{{ $action }}" enctype="multipart/form-data" class="pf-form"
           x-data="{
-              title: @js(old('title.id', $project->getTranslation('title', 'en', false))),
+              title: @js(old('title.en', $project->getTranslation('title', 'en', false))),
               logo: @js($project->logo ? asset('storage/'.$project->logo) : null),
               dropLogo: false
           }">
@@ -101,12 +101,12 @@
             <div class="pf-grid">
                 <div>
                     <label class="pf-label" for="title_id">Title <small>(Indonesian, optional)</small></label>
-                    <input id="title_id" name="title[id]" type="text" class="pf-input" maxlength="150" required x-model="title">
+                    <input id="title_id" name="title[id]" type="text" class="pf-input" maxlength="150" value="{{ old('title.id', $project->getTranslation('title', 'id', false)) }}">
                     @error('title.id')<p class="pf-error">{{ $message }}</p>@enderror
                 </div>
                 <div>
                     <label class="pf-label" for="title_en">Title <small>(English, required)</small></label>
-                    <input id="title_en" name="title[en]" type="text" class="pf-input" maxlength="150"
+                    <input id="title_en" name="title[en]" type="text" class="pf-input" maxlength="150" required x-model="title"
                            value="{{ old('title.en', $project->getTranslation('title', 'en', false)) }}">
                     @error('title.en')<p class="pf-error">{{ $message }}</p>@enderror
                 </div>
@@ -114,7 +114,7 @@
                 <div>
                     <label class="pf-label" for="tag_id">Tag <small>(Indonesia, mis. Season 2)</small></label>
                     <input id="tag_id" name="tag[id]" type="text" class="pf-input" maxlength="80"
-                           value="{{ old('tag.id', $project->getTranslation('tag', 'en', false)) }}">
+                           value="{{ old('tag.id', $project->getTranslation('tag', 'id', false)) }}">
                     @error('tag.id')<p class="pf-error">{{ $message }}</p>@enderror
                 </div>
                 <div>
@@ -186,7 +186,7 @@
             <div class="pf-grid">
                 <div>
                     <label class="pf-label" for="synopsis_id">Indonesia</label>
-                    <textarea id="synopsis_id" name="synopsis[id]" class="pf-input" maxlength="5000">{{ old('synopsis.id', $project->getTranslation('synopsis', 'en', false)) }}</textarea>
+                    <textarea id="synopsis_id" name="synopsis[id]" class="pf-input" maxlength="5000">{{ old('synopsis.id', $project->getTranslation('synopsis', 'id', false)) }}</textarea>
                     @error('synopsis.id')<p class="pf-error">{{ $message }}</p>@enderror
                 </div>
                 <div>

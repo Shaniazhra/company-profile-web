@@ -100,12 +100,12 @@
 
             <div class="pf-grid">
                 <div>
-                    <label class="pf-label" for="title_id">Title <small>(Indonesian, required)</small></label>
+                    <label class="pf-label" for="title_id">Title <small>(Indonesian, optional)</small></label>
                     <input id="title_id" name="title[id]" type="text" class="pf-input" maxlength="150" required x-model="title">
                     @error('title.id')<p class="pf-error">{{ $message }}</p>@enderror
                 </div>
                 <div>
-                    <label class="pf-label" for="title_en">Title <small>(English)</small></label>
+                    <label class="pf-label" for="title_en">Title <small>(English, required)</small></label>
                     <input id="title_en" name="title[en]" type="text" class="pf-input" maxlength="150"
                            value="{{ old('title.en', $project->getTranslation('title', 'en', false)) }}">
                     @error('title.en')<p class="pf-error">{{ $message }}</p>@enderror

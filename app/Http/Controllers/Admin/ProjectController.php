@@ -30,7 +30,7 @@ class ProjectController extends Controller
         $data = $this->validated($request);
 
         $project = new Project;
-        $project->slug = $this->uniqueSlug($data['title']['id']);
+        $project->slug = $this->uniqueSlug($data['title']['en']);
         $this->persist($project, $request, $data);
 
         return redirect()->route('admin.projects.index')->with('status', 'Project added.');
@@ -47,7 +47,7 @@ class ProjectController extends Controller
 
         // Slug tetap setelah dibuat; hanya diisi kalau proyek lama belum punya.
         if (blank($project->slug)) {
-            $project->slug = $this->uniqueSlug($data['title']['id'], $project->id);
+            $project->slug = $this->uniqueSlug($data['title']['en'], $project->id);
         }
 
         $this->persist($project, $request, $data);
@@ -83,8 +83,8 @@ class ProjectController extends Controller
     private function validated(Request $request): array
     {
         return $request->validate([
-            'title.id'     => ['required', 'string', 'max:150'],
-            'title.en'     => ['nullable', 'string', 'max:150'],
+            'title.id'     => ['nullable', 'string', 'max:150'],
+            'title.en'     => ['required', 'string', 'max:150'],
             'tag.id'       => ['nullable', 'string', 'max:80'],
             'tag.en'       => ['nullable', 'string', 'max:80'],
             'synopsis.id'  => ['nullable', 'string', 'max:5000'],
@@ -100,7 +100,7 @@ class ProjectController extends Controller
             'characters.*.photo'          => ['nullable', 'string', 'max:255'],
             'characters.*.photo_file'     => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
         ], [
-            'title.id.required' => 'The title (Indonesian) is required.',
+            'title.en.required' => 'The title (English) is required.',
             'youtube_url.url'   => 'The YouTube link is not valid.',
             'youtube_url.regex' => 'The link must be from youtube.com or youtu.be.',
             'image.image'       => 'The file must be an image.',

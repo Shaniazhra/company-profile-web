@@ -212,7 +212,7 @@ class ProjectController extends Controller
 
     private function uniqueSlug(string $title, ?int $ignoreId = null): string
     {
-        $base = Str::slug($title) ?: 'proyek';
+        $base = Str::slug($title) ?: 'project';
         $slug = $base;
         $i = 2;
 

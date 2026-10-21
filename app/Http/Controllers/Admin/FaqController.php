@@ -7,7 +7,9 @@ use App\Models\Faq;
 use App\Support\AdminForm;
 use App\Support\Sortable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class FaqController extends Controller
 {
@@ -54,6 +56,23 @@ class FaqController extends Controller
         Sortable::move(Faq::class, $item, $request->input('direction'));
 
         return back();
+    }
+
+    // Drag and drop on the FAQ list: saves the new order in one go.
+    public function reorder(Request $request)
+    {
+        $data = $request->validate([
+            'ids'   => ['required', 'array'],
+            'ids.*' => ['integer', Rule::exists((new Faq)->getTable(), 'id')],
+        ]);
+
+        DB::transaction(function () use ($data) {
+            foreach ($data['ids'] as $position => $id) {
+                Faq::whereKey($id)->update(['sort_order' => $position + 1]);
+            }
+        });
+
+        return response()->json(['ok' => true]);
     }
 
     private function persist(Request $request, Faq $item): void

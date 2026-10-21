@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\AboutPhotoController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\SiteTextController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\SetLocale;
@@ -18,13 +22,13 @@ Route::prefix('{locale}')
     ->middleware(SetLocale::class)
     ->group(function () {
         Route::get('/', [HomeController::class, 'index'])->name('home');
-        Route::view('/about', 'about')->name('about');
+        Route::get('/about', [AboutController::class, 'index'])->name('about');
 
         $pages = \App\Http\Controllers\SitePagesController::class;
         Route::get('/services', [$pages, 'services'])->name('services.index');
         Route::get('/services/{service}', [$pages, 'service'])->name('services.show');
         Route::get('/projects', [$pages, 'projects'])->name('projects.index');
-        Route::get('/projects/{project}', [$pages, 'project'])->name('projects.show');
+        Route::get('/projects/{project:slug}', [$pages, 'project'])->name('projects.show');
         Route::get('/process', [$pages, 'process'])->name('process');
         Route::get('/team', [$pages, 'team'])->name('team');
         Route::get('/faq', [$pages, 'faq'])->name('faq');
@@ -37,10 +41,10 @@ Route::prefix('{locale}')
 
 /* ---------- Area login (Breeze) ---------- */
 Route::get('/dashboard', fn () => redirect()->route('admin.index'))
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified.except_admin'])
     ->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified.except_admin'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -50,25 +54,66 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
+    // The admin's own account: name, email, and password
+    Route::get('account', [AccountController::class, 'edit'])->name('account.edit');
+    Route::put('account/profile', [AccountController::class, 'updateProfile'])->name('account.profile');
+    Route::put('account/password', [AccountController::class, 'updatePassword'])->name('account.password');
+
     // Pengaturan situs: tiap bagian disimpan sendiri-sendiri
     Route::get('site', [SiteSettingController::class, 'edit'])->name('site.edit');
     Route::put('site/name', [SiteSettingController::class, 'updateName'])->name('site.name');
+    Route::put('/site/hero-focus', [SiteSettingController::class, 'updateHeroFocus'])->name('site.hero-focus');
     Route::put('site/text/{field}', [SiteSettingController::class, 'updateText'])
-        ->where('field', 'tagline|heart_statement|impact_statement|about_text')
+        ->where('field', 'tagline|heart_statement|impact_statement|about_text|story|vision|mission|bts_title|bts_text|gallery_title|gallery_text|cta_title|cta_text|about_label|about_title|story_title|cta_label')
         ->name('site.text');
+    // Save all texts of a group at once (English only)
+    Route::put('site/texts/home', [SiteTextController::class, 'home'])->name('site.texts.home');
+    Route::put('site/texts/about', [SiteTextController::class, 'about'])->name('site.texts.about');
     Route::post('site/image/{field}', [SiteSettingController::class, 'uploadImage'])
-        ->where('field', 'logo|hero_image')
+        ->where('field', 'logo|hero_image|about_image|about_image_2|about_image_3|about_image_4|bts_poster')
         ->name('site.image.upload');
     Route::delete('site/image/{field}', [SiteSettingController::class, 'destroyImage'])
-        ->where('field', 'logo|hero_image')
+        ->where('field', 'logo|hero_image|about_image|about_image_2|about_image_3|about_image_4|bts_poster')
         ->name('site.image.destroy');
+    Route::put('site/image/{field}/focus', [SiteSettingController::class, 'updateFocus'])
+        ->where('field', 'logo|hero_image|about_image|about_image_2|about_image_3|about_image_4|bts_poster')
+        ->name('site.image.focus');
+
+    // Behind-the-scenes video, and showing or hiding whole sections of the About page
+    Route::post('site/video', [SiteSettingController::class, 'uploadVideo'])->name('site.video.upload');
+    Route::delete('site/video', [SiteSettingController::class, 'destroyVideo'])->name('site.video.destroy');
+    Route::put('site/section/{section}', [SiteSettingController::class, 'toggleSection'])
+        ->where('section', 'bts|gallery')
+        ->name('site.section');
+
+    // Gallery photos on the About page (the order is changed by drag and drop)
+    Route::post('about-photos', [AboutPhotoController::class, 'store'])->name('about-photos.store');
+    Route::put('about-photos-order', [AboutPhotoController::class, 'reorder'])->name('about-photos.order');
+    Route::put('about-photos/{photo}', [AboutPhotoController::class, 'update'])->name('about-photos.update');
+    Route::delete('about-photos/{photo}', [AboutPhotoController::class, 'destroy'])->name('about-photos.destroy');
 
     Route::resource('services', ServiceController::class)->except('show');
     Route::patch('services/{service}/move', [ServiceController::class, 'move'])->name('services.move');
+    // Services list: drag and drop order
+    Route::put('services-order', [ServiceController::class, 'reorder'])->name('services.order');
+    // Hero photo of the public Projects page (set from the Projects list)
+    Route::put('projects-hero', [ProjectController::class, 'updateHero'])->name('projects.hero.update');
+    Route::put('projects-titles', [ProjectController::class, 'updateTitles'])->name('projects.titles');
+    Route::delete('projects-hero', [ProjectController::class, 'destroyHero'])->name('projects.hero.destroy');
     Route::resource('projects', ProjectController::class)->except(['show']);
     Route::patch('projects/{project}/publish', [ProjectController::class, 'togglePublish'])->name('projects.publish');
     Route::resource('clients', ClientController::class)->except('show');
     Route::patch('clients/{client}/move', [ClientController::class, 'move'])->name('clients.move');
+    // Clients list: drag and drop order
+    Route::put('clients-order', [ClientController::class, 'reorder'])->name('clients.order');
+
+    // Team page: hero photo, and the order of the people (drag and drop in the Team list)
+    Route::put('team-hero', [\App\Http\Controllers\Admin\CrewMemberController::class, 'updateHero'])->name('team.hero.update');
+    Route::delete('team-hero', [\App\Http\Controllers\Admin\CrewMemberController::class, 'destroyHero'])->name('team.hero.destroy');
+    Route::put('team-order', [\App\Http\Controllers\Admin\CrewMemberController::class, 'reorder'])->name('team.order');
+    Route::put('contacts-order', [\App\Http\Controllers\Admin\ContactPersonController::class, 'reorder'])->name('contacts.order');
+    // FAQ list: drag and drop order
+    Route::put('faqs-order', [\App\Http\Controllers\Admin\FaqController::class, 'reorder'])->name('faqs.order');
 
     foreach ([
         'team' => \App\Http\Controllers\Admin\CrewMemberController::class,
@@ -76,7 +121,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         'process' => \App\Http\Controllers\Admin\ProcessStageController::class,
         'contacts' => \App\Http\Controllers\Admin\ContactPersonController::class,
         'highlights' => \App\Http\Controllers\Admin\HighlightController::class,
-        'focus' => \App\Http\Controllers\Admin\FocusShotController::class,
     ] as $name => $controller) {
         Route::resource($name, $controller)->except('show')->parameters([$name => 'item']);
         Route::patch($name.'/{item}/move', [$controller, 'move'])->name($name.'.move');

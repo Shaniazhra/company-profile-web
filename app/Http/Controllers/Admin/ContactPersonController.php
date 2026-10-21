@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContactPerson;
-use App\Support\AdminForm;
 use App\Support\Sortable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ContactPersonController extends Controller
 {
@@ -54,6 +54,29 @@ class ContactPersonController extends Controller
         Sortable::move(ContactPerson::class, $item, $request->input('direction'));
 
         return back();
+    }
+
+    /** Save the order after a drag and drop in the list. ids = every contact, in the new order. */
+    public function reorder(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'ids'   => ['required', 'array', 'max:500'],
+            'ids.*' => ['integer'],
+        ]);
+
+        $known = ContactPerson::whereIn('id', $data['ids'])->pluck('id')->all();
+
+        DB::transaction(function () use ($data, $known) {
+            $position = 0;
+
+            foreach ($data['ids'] as $id) {
+                if (in_array((int) $id, $known, true)) {
+                    ContactPerson::whereKey($id)->update(['sort_order' => ++$position]);
+                }
+            }
+        });
+
+        return response()->json(['ok' => true]);
     }
 
     private function persist(Request $request, ContactPerson $item): void

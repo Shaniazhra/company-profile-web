@@ -4,7 +4,6 @@
 
     $stats = [
         ['label' => 'Services',     'icon' => 'services', 'route' => 'admin.services.index',  'total' => $counts['services']['total'], 'note' => $counts['services']['live'].' shown'],
-        ['label' => 'Projects',     'icon' => 'projects', 'route' => 'admin.projects.index',  'total' => $counts['projects']['total'], 'note' => $counts['projects']['live'].' live'],
         ['label' => 'Clients',      'icon' => 'clients',  'route' => 'admin.clients.index',   'total' => $counts['clients']['total'],  'note' => $counts['clients']['live'].' shown'],
         ['label' => 'Team Members', 'icon' => 'team',     'route' => 'admin.team.index',      'total' => $counts['team']['total'],     'note' => $counts['team']['live'].' shown'],
         ['label' => 'Inquiries',    'icon' => 'user',     'route' => 'admin.inquiries.index', 'total' => $counts['inquiries']['total'], 'note' => $counts['inquiries']['unread'].' unread', 'featured' => true],
@@ -12,9 +11,6 @@
 
     // Shortcuts to the content that feeds the home page: [label, route, key in $counts]
     $quick = [
-        ['Process stages',     'admin.process.index',    'process'],
-        ['Highlights',         'admin.highlights.index', 'highlights'],
-        ['Focus screenshots',  'admin.focus.index',      'focus'],
         ['FAQ',                'admin.faqs.index',       'faqs'],
         ['Contacts',           'admin.contacts.index',   'contacts'],
     ];
@@ -101,14 +97,14 @@
             width: 2.5rem;
             height: 2.5rem;
             overflow: hidden;
-            background: #241a4a;
+            background: transparent;
             color: #fff;
             border-radius: 50%;
             font-family: var(--font-heading);
             font-size: var(--fs-small);
             font-weight: 600;
         }
-        .dash-person-avatar img { width: 100%; height: 100%; padding: 0.4rem; object-fit: contain; }
+        .dash-person-avatar img { width: 100%; height: 100%; object-fit: contain; }
         .dash-person-text { flex: 1; min-width: 0; }
         .dash-person-name { overflow: hidden; font-size: var(--fs-small); font-weight: 600; color: var(--color-text); text-overflow: ellipsis; white-space: nowrap; }
         .dash-person-sub { overflow: hidden; font-size: var(--fs-caption); text-overflow: ellipsis; white-space: nowrap; }
@@ -245,8 +241,8 @@
                         <tbody>
                             @foreach ($projects as $project)
                                 <tr>
-                                    <td class="dash-project-title" data-label="Title">{{ $project->getTranslation('title', 'en') }}</td>
-                                    <td data-label="Tag">{{ $project->getTranslation('tag', 'en') ?: '-' }}</td>
+                                    <td class="dash-project-title" data-label="Judul">{{ $project->title ?: $project->name }}</td>
+                                    <td data-label="Tag">{{ $project->getTranslation('tag', 'en', false) ?: '-' }}</td>
                                     <td data-label="Year">{{ $project->release_year ?: '-' }}</td>
                                     <td data-label="Status">
                                         <span class="dash-status {{ $project->is_published ? 'is-live' : 'is-draft' }}">

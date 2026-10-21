@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Support\AdminForm;
 use App\Support\Sortable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ClientController extends Controller
@@ -58,6 +59,23 @@ class ClientController extends Controller
         Sortable::move(Client::class, $client, $request->input('direction'));
 
         return back();
+    }
+
+    // Drag and drop on the Clients list: saves the new order in one go.
+    public function reorder(Request $request)
+    {
+        $data = $request->validate([
+            'ids'   => ['required', 'array'],
+            'ids.*' => ['integer', 'exists:clients,id'],
+        ]);
+
+        DB::transaction(function () use ($data) {
+            foreach ($data['ids'] as $position => $id) {
+                Client::whereKey($id)->update(['sort_order' => $position + 1]);
+            }
+        });
+
+        return response()->json(['ok' => true]);
     }
 
     private function persist(Request $request, Client $client): void

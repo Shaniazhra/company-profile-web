@@ -12,8 +12,14 @@
     if (Route::has('pipeline')) {
         $navItems[] = ['label' => __('Production Pipeline'), 'href' => route('pipeline', ['locale' => $loc]), 'active' => request()->routeIs('pipeline')];
     }
-    $navItems[] = ['label' => __('Team'), 'href' => $home.'#team', 'active' => false];
-    $navItems[] = ['label' => __('Projects'), 'href' => $home.'#projects', 'active' => false];
+    // Team opens the Team page (team). Falls back to the Home section if that route does not exist.
+    $navItems[] = Route::has('team')
+        ? ['label' => __('Team'), 'href' => route('team', ['locale' => $loc]), 'active' => request()->routeIs('team')]
+        : ['label' => __('Team'), 'href' => $home.'#team', 'active' => false];
+    // Projects opens the Projects page (projects.index). Falls back to the Home section if that route does not exist.
+    $navItems[] = Route::has('projects.index')
+        ? ['label' => __('Projects'), 'href' => route('projects.index', ['locale' => $loc]), 'active' => request()->routeIs('projects.*')]
+        : ['label' => __('Projects'), 'href' => $home.'#projects', 'active' => false];
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', $loc) }}">

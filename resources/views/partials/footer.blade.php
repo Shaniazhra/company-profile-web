@@ -1,4 +1,7 @@
 @php
+    // Contact us opens the Contact page. Falls back to the contact band on the Home page.
+    $contactUrl = Route::has('contact') ? route('contact', ['locale' => app()->getLocale()]) : $home.'#contact';
+
     // To be replaced with data from the admin panel (stage 5)
     $contacts = \App\Models\ContactPerson::active()->ordered()->get()->map(fn ($c) => ['name' => $c->name, 'phone' => $c->phone])->all();
 
@@ -201,7 +204,7 @@
             <div>
                 <h3 class="sf-title">{{ __('Contact') }}</h3>
                 <div class="sf-links">
-                    <a href="{{ $home }}#contact">{{ __('Contact us') }}</a>
+                    <a href="{{ $contactUrl }}">{{ __('Contact us') }}</a>
                     <a href="{{ $instagramUrl }}" target="_blank" rel="noopener">Instagram</a>
                     <a href="{{ $linkedinUrl }}" target="_blank" rel="noopener">LinkedIn</a>
                 </div>

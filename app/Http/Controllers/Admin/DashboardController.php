@@ -7,7 +7,6 @@ use App\Models\Client;
 use App\Models\ContactPerson;
 use App\Models\CrewMember;
 use App\Models\Faq;
-use App\Models\FocusShot;
 use App\Models\Highlight;
 use App\Models\Inquiry;
 use App\Models\ProcessStage;
@@ -37,7 +36,6 @@ class DashboardController extends Controller
             'team'       => $tally(CrewMember::class),
             'process'    => $tally(ProcessStage::class),
             'highlights' => $tally(Highlight::class),
-            'focus'      => $tally(FocusShot::class),
             'faqs'       => $tally(Faq::class),
             'contacts'   => $tally(ContactPerson::class),
             'inquiries'  => $has(Inquiry::class)

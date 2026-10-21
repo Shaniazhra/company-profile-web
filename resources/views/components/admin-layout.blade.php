@@ -13,7 +13,6 @@
         request()->routeIs('admin.team.*') => 'Team',
         request()->routeIs('admin.process.*') => 'Process',
         request()->routeIs('admin.highlights.*') => 'Highlights',
-        request()->routeIs('admin.focus.*') => 'Focus screenshots',
         request()->routeIs('admin.faqs.*') => 'FAQ',
         request()->routeIs('admin.contacts.*') => 'Contacts',
         request()->routeIs('admin.inquiries.*') => 'Inquiries',
@@ -36,7 +35,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofollow">
-    <title>{{ $title }} — {{ $site?->site_name ?: config('app.name') }}</title>
+    <title>{{ $title }} | {{ $site?->site_name ?: config('app.name') }}</title>
 
     @if ($faviconUrl)
         <link rel="icon" href="{{ $faviconUrl }}">

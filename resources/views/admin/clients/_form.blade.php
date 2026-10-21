@@ -4,8 +4,8 @@
     <x-input-error :messages="$errors->get('name')" class="mt-1" />
 </div>
 
-<x-admin.image-field name="logo" label="Client Logo" :path="$client->logo" :dark="true"
-    help="PNG transparan paling baik (logo putih pun aman, latarnya gelap di sini). Maks 2 MB." />
+<x-admin.image-field name="logo" label="Client Logo" :path="$client->logo" :dark="false"
+    help="PNG transparan paling baik. Maks 2 MB." />
 
 <div>
     <x-input-label for="website_url" value="Website (opsional)" />

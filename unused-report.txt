@@ -1,0 +1,38 @@
+﻿
+======================================================================
+1. SISA FILE SEMENTARA / BACKUP (cek lalu hapus kalau memang tidak perlu)
+======================================================================
+  backup-inquiry\index.blade.php
+  backup-inquiry\InquiryController.php
+  backup-inquiry\show.blade.php
+  storage\projects-backup.json
+
+======================================================================
+2. CLASS PHP (controller, model, middleware, helper) YANG NAMANYA TIDAK DIPANGGIL
+======================================================================
+  app\Config\admin-navigation.php
+  app\Console\Commands\CreateAdmin.php
+  app\Console\Commands\OptimizeImages.php
+  app\Http\Controllers\Auth\RegisteredUserController.php
+
+======================================================================
+3. FILE BLADE (VIEW / KOMPONEN) YANG TIDAK DIPANGGIL
+======================================================================
+  resources\views\components\auth-session-status.blade.php
+  resources\views\profile\partials\delete-user-form.blade.php
+  resources\views\profile\partials\update-password-form.blade.php
+  resources\views\profile\partials\update-profile-information-form.blade.php
+
+======================================================================
+4. GAMBAR DI public\images YANG NAMANYA TIDAK DISEBUT DI KODE
+======================================================================
+  public\images\focus\lighting.png
+  public\images\focus\render.png
+  public\images\focus\set-dress.png
+  (Foto yang diunggah lewat admin ada di storage dan tidak dicek di sini.)
+
+======================================================================
+5. ROUTE YANG NAMANYA TIDAK DIPANGGIL DI KODE (selain file routes)
+======================================================================
+  Gagal membaca route:list. Lewati bagian ini.
+  (tidak ada temuan)

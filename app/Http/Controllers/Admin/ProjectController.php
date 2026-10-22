@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\SiteSetting;
+use App\Support\AdminForm;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -95,7 +96,7 @@ class ProjectController extends Controller
 
         if ($request->hasFile('projects_image')) {
             $old = $site->projects_image;
-            $site->projects_image = $request->file('projects_image')->store('site', 'public');
+            $site->projects_image = AdminForm::storeOptimized($request->file('projects_image'), 'site', 2400);
         }
 
         $site->projects_image_x    = (float) $request->input('focus_x', 50);
@@ -215,7 +216,7 @@ class ProjectController extends Controller
         $oldImage = $project->image;
 
         if ($request->hasFile('image')) {
-            $project->image = $request->file('image')->store('projects', 'public');
+            $project->image = AdminForm::storeOptimized($request->file('image'), 'projects', 1920);
         } elseif ($request->boolean('remove_image')) {
             $project->image = null;
         }
@@ -224,7 +225,7 @@ class ProjectController extends Controller
         $oldLogo = $project->logo;
 
         if ($request->hasFile('logo')) {
-            $project->logo = $request->file('logo')->store('projects/logos', 'public');
+            $project->logo = AdminForm::storeOptimized($request->file('logo'), 'projects/logos', 1000);
         }
 
         $project->save();
@@ -261,7 +262,7 @@ class ProjectController extends Controller
             $photo = in_array($photo, $oldPhotos, true) ? $photo : null;
 
             if ($request->hasFile("characters.$i.photo_file")) {
-                $photo = $request->file("characters.$i.photo_file")->store('projects/characters', 'public');
+                $photo = AdminForm::storeOptimized($request->file("characters.$i.photo_file"), 'projects/characters', 800);
             }
 
             $result[] = [

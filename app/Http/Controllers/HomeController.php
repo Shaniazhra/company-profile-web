@@ -35,10 +35,12 @@ class HomeController extends Controller
 
         $projectsRoute = collect(['projects', 'projects.index'])->first(fn ($name) => Route::has($name));
 
-        $team = CrewMember::active()->ordered()->get()->map(fn ($m) => [
+        // Only the few important people (marked in the admin, at most 3). The full team is on the Team page.
+        $team = CrewMember::homeList()->map(fn ($m) => [
             'name'      => $m->name,
             'role'      => $m->role,
             'photo_url' => $m->photo_url,
+            'photo_style' => $m->photoStyle(),
         ])->all();
 
         $clients = Client::active()->ordered()->get()->map(fn ($c) => [

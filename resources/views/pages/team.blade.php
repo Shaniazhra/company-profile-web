@@ -59,6 +59,10 @@
 
     /* Team list */
     .tm-sec { padding-block: clamp(3rem, 7vw, 5.5rem); background: #fff; color: var(--ink); }
+    /* One block per division, with its name above the cards */
+    .tm-group + .tm-group { margin-top: clamp(2.5rem, 6vw, 4rem); }
+    .tm-div { display: flex; align-items: center; gap: 1rem; max-width: 62rem; margin: 0 auto clamp(1.25rem, 3vw, 2rem); font-size: var(--fs-h3); line-height: 1.2; color: var(--ink); }
+    .tm-div::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
     .tm-empty { max-width: 32rem; margin: 0 auto; padding: 3rem 1rem; text-align: center; font-size: var(--fs-small); color: var(--ink-soft); }
 
     /* Card: same as Home and About. A tall purple tab on the left with the brand name running up it,
@@ -121,11 +125,13 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        object-position: center bottom;
-        transform-origin: center bottom;
+        /* Position and zoom come from the admin (--fx, --fy, --z). The defaults match the old look. */
+        object-position: var(--fx, 50%) var(--fy, 100%);
+        transform: scale(var(--z, 1));
+        transform-origin: var(--fx, 50%) var(--fy, 100%);
         transition: transform 0.5s ease;
     }
-    .crew-card:hover .crew-photo img { transform: scale(1.03); }
+    .crew-card:hover .crew-photo img { transform: scale(calc(var(--z, 1) * 1.03)); }
     .crew-card::after {
         content: "";
         position: absolute;
@@ -138,7 +144,7 @@
         pointer-events: none;
     }
     .crew-info { position: absolute; right: 1rem; bottom: 1rem; left: 1rem; z-index: 3; }
-    .crew-card h2 { margin: 0; font-size: var(--fs-h4); font-weight: 700; line-height: 1.2; color: #fff; }
+    .crew-card h2, .crew-card h3 { margin: 0; font-size: var(--fs-h4); font-weight: 700; line-height: 1.2; color: #fff; }
     .crew-role { margin: 0.2rem 0 0; font-size: var(--fs-small); color: rgba(255, 255, 255, 0.9); }
 
     /* Credits under the card */
@@ -148,7 +154,7 @@
 
     @media (prefers-reduced-motion: reduce) {
         .crew-photo img { transition: none; }
-        .crew-card:hover .crew-photo img { transform: none; }
+        .crew-card:hover .crew-photo img { transform: scale(var(--z, 1)); }
     }
 </style>
 @endpush
@@ -158,6 +164,15 @@
     $loc       = app()->getLocale();
     $homeUrl   = Route::has('home') ? route('home', ['locale' => $loc]) : url('/');
     $heroUrl   = $heroUrl ?? null;
+    // People grouped by division, in the order set in the admin. People without a division come first, without a heading.
+    $divisions = \App\Models\TeamDivision::ordered()->get();
+    $groups    = collect();
+    $noDivision = $members->whereNull('team_division_id');
+    if ($noDivision->isNotEmpty()) { $groups->push(['name' => null, 'members' => $noDivision]); }
+    foreach ($divisions as $division) {
+        $inDivision = $members->where('team_division_id', $division->id);
+        if ($inDivision->isNotEmpty()) { $groups->push(['name' => $division->name, 'members' => $inDivision]); }
+    }
     $brandName = $brand ?? (($site ?? \App\Models\SiteSetting::first())?->site_name ?: 'Dream Ratio');
 @endphp
 
@@ -183,32 +198,40 @@
             @if ($members->isEmpty())
                 <p class="tm-empty">{{ __('Our team will be listed here soon.') }}</p>
             @else
-                <div class="crew">
-                    @foreach ($members as $m)
-                        <article class="crew-item" data-reveal>
-                            <div class="crew-card">
-                                <span class="crew-mark" aria-hidden="true">{{ $brandName }}</span>
-                                <div class="crew-photo">
-                                    @if ($m->photo_url)
-                                        <img src="{{ $m->photo_url }}" alt="{{ $m->name }}" loading="lazy">
-                                    @else
-                                        <span aria-hidden="true">{{ collect(explode(' ', $m->name))->map(fn ($w) => mb_substr($w, 0, 1))->take(2)->implode('') }}</span>
-                                    @endif
-                                </div>
-                                <div class="crew-info">
-                                    <h2>{{ $m->name }}</h2>
-                                    <p class="crew-role">{{ $m->role }}</p>
-                                </div>
-                            </div>
+                @foreach ($groups as $group)
+                    <div class="tm-group">
+                        @if ($group['name'])
+                            <h2 class="tm-div">{{ $group['name'] }}</h2>
+                        @endif
 
-                            @if ($m->creditList())
-                                <ul class="crew-credits">
-                                    @foreach ($m->creditList() as $credit)<li>{{ $credit }}</li>@endforeach
-                                </ul>
-                            @endif
-                        </article>
-                    @endforeach
-                </div>
+                        <div class="crew">
+                            @foreach ($group['members'] as $m)
+                                <article class="crew-item" data-reveal>
+                                    <div class="crew-card">
+                                        <span class="crew-mark" aria-hidden="true">{{ $brandName }}</span>
+                                        <div class="crew-photo">
+                                            @if ($m->photo_url)
+                                                <img src="{{ $m->photo_url }}" alt="{{ $m->name }}" loading="lazy" style="{{ $m->photoStyle() }}">
+                                            @else
+                                                <span aria-hidden="true">{{ collect(explode(' ', $m->name))->map(fn ($w) => mb_substr($w, 0, 1))->take(2)->implode('') }}</span>
+                                            @endif
+                                        </div>
+                                        <div class="crew-info">
+                                            <h3>{{ $m->name }}</h3>
+                                            <p class="crew-role">{{ $m->role }}</p>
+                                        </div>
+                                    </div>
+
+                                    @if ($m->creditList())
+                                        <ul class="crew-credits">
+                                            @foreach ($m->creditList() as $credit)<li>{{ $credit }}</li>@endforeach
+                                        </ul>
+                                    @endif
+                                </article>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
             @endif
         </div>
     </section>

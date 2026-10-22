@@ -131,7 +131,10 @@ class SiteSettingController extends Controller
         $site = SiteSetting::current();
         $old = $site->{$field};
 
-        $site->{$field} = $request->file($field)->store('site', 'public');
+        // Photos are made lighter (WebP, at most 2400 px wide). The logo is stored as it is, because it is also used as the site icon.
+        $site->{$field} = $field === 'logo'
+            ? $request->file($field)->store('site', 'public')
+            : AdminForm::storeOptimized($request->file($field), 'site', 2400);
 
         // A new hero photo starts centered again.
         if ($field === 'hero_image') {

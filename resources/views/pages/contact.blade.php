@@ -29,9 +29,11 @@
 <style>
     /* White page: the text colors are set here because the site default is light text on a dark page */
     /* Title only: white background, dark text */
-    .ct-title { display: grid; place-items: center; padding: calc(var(--nav-height) + clamp(1.5rem, 4vw, 3rem)) 0 clamp(1rem, 3vw, 1.5rem); text-align: center; background: #fff; }
+    .ct-title { display: grid; place-items: center; padding: calc(var(--nav-height) + clamp(1rem, 2.5vw, 1.75rem)) 0 clamp(0.75rem, 2vw, 1.25rem); text-align: center; background: #fff; }
     .ct-title h1 { margin: 0 auto; max-width: 24ch; color: #1a1433; text-wrap: balance; }
     .ct-wrap { --color-text: #1a1433; --color-muted: #5d5873; --color-border: #e4e1ee; --focus: var(--color-primary); background: #fff; color: var(--color-text); }
+    /* Keeps the gap between the title and the first card short. The site default section padding is much larger. */
+    .ct-wrap.section { padding-top: 0; }
     .ct-panel { padding: clamp(1.25rem, 3vw, 2rem); background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: 0 14px 30px -26px rgba(36, 26, 74, 0.5); }
     .ct-panel + .ct-panel { margin-top: 1.25rem; }
     .ct-head { margin-bottom: 1.25rem; }
@@ -145,8 +147,8 @@
                                 @error('name')<p class="ct-err" id="c-name-err">{{ $message }}</p>@enderror
                             </div>
                             <div class="ct-field">
-                                <label for="c-contact">{{ __('Your email or phone number') }}</label>
-                                <input id="c-contact" name="contact" type="text" placeholder="Your email or phone number" value="{{ old('contact') }}" maxlength="190" required @error('contact') aria-invalid="true" aria-describedby="c-contact-err" @enderror>
+                                <label for="c-contact">{{ __('Your email') }}</label>
+                                <input id="c-contact" name="contact" type="text" placeholder="Your email" value="{{ old('contact') }}" maxlength="190" required @error('contact') aria-invalid="true" aria-describedby="c-contact-err" @enderror>
                                 @error('contact')<p class="ct-err" id="c-contact-err">{{ $message }}</p>@enderror
                             </div>
                             <div class="ct-field">

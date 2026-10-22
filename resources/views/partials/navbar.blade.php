@@ -15,6 +15,9 @@
             @foreach ($navItems as $item)
                 <a href="{{ $item['href'] }}" class="{{ $item['active'] ? 'active' : '' }}" @if ($item['active']) aria-current="page" @endif>{{ $item['label'] }}</a>
             @endforeach
+
+            {{-- Contact us inside the menu. It is only shown on small screens, where the button next to the menu icon is hidden. --}}
+            <a href="{{ $contactUrl }}" class="btn btn-primary nav-contact" @if ($solidBar) aria-current="page" @endif>{{ __('Contact us') }}</a>
         </nav>
 
         <div class="nav-actions">
@@ -42,8 +45,6 @@
         })();
     </script>
 @endif
-
-@vite(['resources/css/theme.css'])
 
 @once
 <style>
@@ -74,6 +75,20 @@
     .navbar .nav-links a::after {
         content: none !important;
         display: none !important;
+    }
+
+    /* Contact us in the menu: hidden on desktop (the button on the right is used), shown on small screens. */
+    .navbar .nav-links .nav-contact { display: none; }
+    @media (max-width: 900px) {
+        .navbar .nav-links .nav-contact {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 2.75rem;
+            margin-top: 0.5rem;
+            color: #fff;
+        }
     }
 
     @media (prefers-reduced-motion: reduce) {

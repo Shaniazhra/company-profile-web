@@ -4,6 +4,16 @@
 @section('description', \Illuminate\Support\Str::limit(strip_tags(($site->heart_statement ?? null) ?: $brand), 155))
 
 {{-- Home-only CSS. Colors, fonts, text sizes, radius, and buttons come from the tokens in theme.css --}}
+@push('preload')
+@php
+    // The hero photo is the biggest thing on the page, so the browser is told to fetch it first.
+    $heroPreload = ! empty($site->hero_image) ? asset('storage/'.$site->hero_image) : null;
+@endphp
+@if ($heroPreload)
+    <link rel="preload" as="image" href="{{ $heroPreload }}" fetchpriority="high">
+@endif
+@endpush
+
 @push('head')
 @php
     // Site icon: use the favicon column if set, otherwise the logo.
@@ -12,8 +22,6 @@
         ? asset('storage/'.$faviconPath).'?v='.($site?->updated_at?->timestamp ?? 1)
         : null;
 @endphp
-
-@vite(['resources/css/theme.css'])
 
 @if ($faviconUrl)
     <link rel="icon" href="{{ $faviconUrl }}">
@@ -143,22 +151,6 @@
     .svc-photo .frame-media { margin-bottom: 1.1rem; aspect-ratio: 16 / 10; border-radius: var(--radius-lg); }
     .svc-photo h3 { margin: 0 0 0.4rem; font-size: var(--fs-h3); line-height: 1.25; }
     .svc-photo p { font-size: var(--fs-small); }
-    /* "Ask about this service" link under each service: plain text, no outline and no background. */
-        .svc-link {
-        display: inline-flex;
-        align-items: center;
-        margin-top: 0.9rem;
-        padding: 0;
-        background: none;
-        border: 0;
-        font-size: var(--fs-small);
-        font-weight: 600;
-        color: var(--color-primary);
-        text-decoration: none;
-    }
-    .svc-link:hover { text-decoration: underline; text-underline-offset: 0.25em; }
-    .svc-link:hover { text-decoration: underline; text-underline-offset: 0.25em; }
-    .svc-link:hover::after { transform: translateX(0.2rem); }
 
     /* Latest project: full container width, so the image lines up with the navbar logo on the left
        and the text runs to the Contact us button on the right. Image left, details right, vertically centered. */
@@ -242,11 +234,13 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        object-position: center bottom;
-        transform-origin: center bottom;
+        /* Position and zoom come from the admin (--fx, --fy, --z). The defaults match the old look. */
+        object-position: var(--fx, 50%) var(--fy, 100%);
+        transform: scale(var(--z, 1));
+        transform-origin: var(--fx, 50%) var(--fy, 100%);
         transition: transform 0.5s ease;
     }
-    .crew-card:hover .crew-photo img { transform: scale(1.03); }
+    .crew-card:hover .crew-photo img { transform: scale(calc(var(--z, 1) * 1.03)); }
     /* Gradient at the bottom, full width, in front of the person, behind the name and role */
     .crew-card::after {
         content: "";
@@ -337,7 +331,7 @@
     }
     @media (prefers-reduced-motion: reduce) {
         .svc-card, .faq-item, .crew-photo img { transition: none; }
-        .crew-card:hover .crew-photo img { transform: none; }
+        .crew-card:hover .crew-photo img { transform: scale(var(--z, 1)); }
     }
 </style>
 @endpush
@@ -369,6 +363,9 @@
     $featuredUrl = $featured['url'] ?? null;
     $allProjectsUrl = $projectsUrl ?? null;
 
+    // "Get in Touch" (hero) and "Contact us" (FAQ card) open the Contact page. Falls back to the contact band in the footer.
+    $contactUrl = Route::has('contact') ? route('contact', ['locale' => app()->getLocale()]) : '#contact';
+
     // "See more" button under the team. It opens the team page, and is hidden when that route does not exist.
     $teamUrl = Route::has('team') ? route('team', ['locale' => app()->getLocale()]) : null;
 
@@ -384,14 +381,14 @@
 
     <section class="home-hero {{ $heroImg ? 'has-image' : '' }}">
         @if ($heroImg)
-            <img class="home-hero-bg" src="{{ $heroImg }}" alt="" style="object-position: {{ $heroPos }}">
+            <img class="home-hero-bg" src="{{ $heroImg }}" {{ \App\Support\Img::attrs($heroImg) }} alt="" fetchpriority="high" decoding="async" style="object-position: {{ $heroPos }}">
         @endif
 
         <div class="container">
             <h1 class="home-title">{{ $title }}</h1>
             @if ($heart)<p class="lead">{{ $heart }}</p>@endif
             <div class="btn-row">
-                <a href="#contact" class="btn btn-primary">{{ __('Get in Touch') }}</a>
+                <a href="{{ $contactUrl }}" class="btn btn-primary">{{ __('Get in Touch') }}</a>
             </div>
         </div>
     </section>
@@ -425,10 +422,9 @@
             <div class="svc-photo-grid" style="--cols: {{ min($servicePhotos->count(), 4) }}">
                 @foreach ($servicePhotos as $s)
                     <article class="svc-photo" data-reveal>
-                        <div class="frame-media"><img src="{{ $s['img'] }}" alt="{{ $s['title'] }}" loading="lazy"></div>
+                        <div class="frame-media"><img src="{{ $s['img'] }}" {{ \App\Support\Img::attrs($s['img']) }} alt="{{ $s['title'] }}" loading="lazy" decoding="async"></div>
                         <h3>{{ $s['title'] }}</h3>
                         <p>{{ $s['text'] }}</p>
-                        <a href="{{ $s['url'] ?? '#contact' }}" class="svc-link">{{ __('Ask about this service') }}</a>
                     </article>
                 @endforeach
             </div>
@@ -448,7 +444,7 @@
                 <div class="pj-media" data-reveal>
                     <div class="frame-media">
                         @if ($featuredImg)
-                            <img src="{{ $featuredImg }}" alt="{{ $featuredName }}" loading="lazy">
+                            <img src="{{ $featuredImg }}" {{ \App\Support\Img::attrs($featuredImg) }} alt="{{ $featuredName }}" loading="lazy" decoding="async">
                         @else
                             <span>{{ $featuredName }}</span>
                         @endif
@@ -457,7 +453,7 @@
 
                 <div class="pj-text" data-reveal>
                     @if ($featuredLogo)
-                        <h3 class="pj-logo"><img src="{{ $featuredLogo }}" alt="{{ $featuredName }}"></h3>
+                        <h3 class="pj-logo"><img src="{{ $featuredLogo }}" {{ \App\Support\Img::attrs($featuredLogo) }} alt="{{ $featuredName }}" decoding="async"></h3>
                     @else
                         <h3 class="pj-title">{{ $featuredName }}</h3>
                     @endif
@@ -496,7 +492,7 @@
                             <span class="crew-mark" aria-hidden="true">{{ $brand }}</span>
                             <div class="crew-photo">
                                 @if ($photo = $p['photo_url'] ?? null)
-                                    <img src="{{ $photo }}" alt="{{ $p['name'] }}" loading="lazy">
+                                    <img src="{{ $photo }}" {{ \App\Support\Img::attrs($photo) }} alt="{{ $p['name'] }}" loading="lazy" decoding="async" style="{{ $p['photo_style'] ?? '' }}">
                                 @else
                                     <span aria-hidden="true">{{ collect(explode(' ', $p['name']))->map(fn ($w) => mb_substr($w, 0, 1))->take(2)->implode('') }}</span>
                                 @endif
@@ -529,7 +525,7 @@
             <div class="client-row">
                 @foreach ($clients as [$cn, $cf])
                     @if ($cf)
-                        <img src="{{ $cf }}" alt="{{ $cn }}" loading="lazy">
+                        <img src="{{ $cf }}" {{ \App\Support\Img::attrs($cf) }} alt="{{ $cn }}" loading="lazy" decoding="async">
                     @else
                         <span>{{ $cn }}</span>
                     @endif
@@ -560,7 +556,7 @@
                 <aside class="faq-aside">
                     <h3>{{ __('Have a different question?') }}</h3>
                     <p>{{ __('Tell us what you need and talk to us directly by phone.') }}</p>
-                    <a href="#contact" class="btn btn-primary">{{ __('Contact us') }}</a>
+                    <a href="{{ $contactUrl }}" class="btn btn-primary">{{ __('Contact us') }}</a>
                 </aside>
             </div>
         </div>

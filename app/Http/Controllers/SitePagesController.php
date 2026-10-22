@@ -8,7 +8,6 @@ use App\Models\Faq;
 use App\Models\Inquiry;
 use App\Models\ProcessStage;
 use App\Models\Project;
-use App\Models\Service;
 use Illuminate\Http\Request;
 
 /*
@@ -17,21 +16,6 @@ use Illuminate\Http\Request;
  */
 class SitePagesController extends Controller
 {
-    public function services()
-    {
-        return view('pages.services', ['services' => Service::active()->ordered()->get()]);
-    }
-
-    public function service(Request $request)
-    {
-        $service = Service::active()->findOrFail($request->route('service'));
-
-        return view('pages.service', [
-            'service' => $service,
-            'others' => Service::active()->ordered()->where('id', '!=', $service->id)->get(),
-        ]);
-    }
-
     public function projects()
     {
         return view('pages.projects', ['projects' => Project::published()->ordered()->get()]);

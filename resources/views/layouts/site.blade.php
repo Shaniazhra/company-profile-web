@@ -29,11 +29,17 @@
     <title>@yield('title', __('Home')) | {{ $brand }}</title>
     <meta name="description" content="@yield('description', 'Dream Ratio: We Animate Dreams')">
 
+    {{-- A page can put its biggest photo here (@push('preload')) so the browser starts loading it first. --}}
+    @stack('preload')
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    {{-- The font file loads without blocking the first paint. The text shows in a fallback font until it arrives (display=swap). --}}
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap"></noscript>
 
-    @vite(['resources/css/theme.css', 'resources/js/app.js'])
+    @vite(['resources/css/theme.css', 'resources/js/site.js'])
     <script>document.documentElement.classList.add('js');</script>
     @stack('head')
 </head>

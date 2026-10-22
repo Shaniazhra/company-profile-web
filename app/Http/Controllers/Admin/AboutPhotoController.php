@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AboutPhoto;
+use App\Support\AdminForm;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,7 +44,7 @@ class AboutPhotoController extends Controller
                 $order = (int) AboutPhoto::max('sort_order');
 
                 foreach ($request->file('photos') as $file) {
-                    $path = $file->store('about', 'public');
+                    $path = AdminForm::storeOptimized($file, 'about', 1600);
                     $stored[] = $path;
 
                     AboutPhoto::create([
@@ -90,7 +91,7 @@ class AboutPhotoController extends Controller
         if ($request->hasFile('photo')) {
             // Save the new file first. The old one is deleted only after the row is saved.
             $old = $photo->path;
-            $photo->path = $request->file('photo')->store('about', 'public');
+            $photo->path = AdminForm::storeOptimized($request->file('photo'), 'about', 1600);
         }
 
         $photo->alt = $data['alt'] ?? null;

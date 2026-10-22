@@ -4,6 +4,18 @@
 @section('description', \Illuminate\Support\Str::limit(strip_tags((string) (($site->about_text ?? null) ?: 'Dream Ratio: We Animate Dreams')), 155))
 
 {{-- About-only CSS. Colors, fonts, text sizes, radius, and buttons come from the tokens in theme.css. --}}
+@push('preload')
+@php
+    // The banner photo is the biggest thing at the top of the page, so the browser is told to fetch it first.
+    $aboutPreload = ! empty($site->about_image)
+        ? (preg_match('#^(https?:)?//|^/#', $site->about_image) ? $site->about_image : asset('storage/'.$site->about_image))
+        : null;
+@endphp
+@if ($aboutPreload)
+    <link rel="preload" as="image" href="{{ $aboutPreload }}" fetchpriority="high">
+@endif
+@endpush
+
 @push('head')
 @php
     // Site icon: use the favicon column if set, otherwise the logo.
@@ -12,8 +24,6 @@
         ? asset('storage/'.$faviconPath).'?v='.($site?->updated_at?->timestamp ?? 1)
         : null;
 @endphp
-
-@vite(['resources/css/theme.css'])
 
 @if ($faviconUrl)
     <link rel="icon" href="{{ $faviconUrl }}">
@@ -31,6 +41,8 @@
         --lilac: var(--color-muted);
         --focus-light: var(--focus);
         overflow-x: clip;
+        /* The page behind the sections is dark. This keeps a hairline gap between two sections from showing as a dark line. */
+        background: #fff;
     }
     .about [id] { scroll-margin-top: calc(var(--nav-height) + 1rem); }
     .about h1, .about h2, .about h3 { text-wrap: balance; }
@@ -39,7 +51,8 @@
     .about .btn { min-height: 2.75rem; }
 
     /* Section tones: tint and white alternate, one section is dark */
-    .about-sec { padding-block: clamp(3rem, 7vw, 5.5rem); background: var(--bg); color: var(--color-text); }
+    /* The browser skips drawing sections that are far off screen, which makes the page lighter to load and scroll. */
+    .about-sec { padding-block: clamp(3rem, 7vw, 5.5rem); background: var(--bg); color: var(--color-text); content-visibility: auto; contain-intrinsic-size: auto 38rem; }
     .about-sec--tight { padding-block: clamp(2rem, 5vw, 3.5rem); }
     .ab-paper, .ab-white {
         --color-text: var(--ink);
@@ -227,11 +240,13 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        object-position: center bottom;
-        transform-origin: center bottom;
+        /* Position and zoom come from the admin (--fx, --fy, --z). The defaults match the old look. */
+        object-position: var(--fx, 50%) var(--fy, 100%);
+        transform: scale(var(--z, 1));
+        transform-origin: var(--fx, 50%) var(--fy, 100%);
         transition: transform 0.5s ease;
     }
-    .crew-card:hover .crew-photo img { transform: scale(1.03); }
+    .crew-card:hover .crew-photo img { transform: scale(calc(var(--z, 1) * 1.03)); }
     .crew-card::after {
         content: "";
         position: absolute;
@@ -310,11 +325,16 @@
     @media (prefers-reduced-motion: reduce) {
         .ab-g-item img, .crew-photo img { transition: none; }
         .ab-g-item:hover img { transform: none; }
-        .crew-card:hover .crew-photo img { transform: none; }
+        .crew-card:hover .crew-photo img { transform: scale(var(--z, 1)); }
     }
+
+    /* Who We Are: on small screens the order is text, photo, then the button. */
+    .ab-intro-top .ab-intro-btn-mobile { display: none; }
 
     @media (max-width: 900px) {
         .ab-intro, .ab-approach, .ab-intro-top { grid-template-columns: 1fr; }
+        .ab-intro-top-text .btn-row { display: none; }
+        .ab-intro-top .ab-intro-btn-mobile { display: flex; }
         .ab-intro.is-single, .ab-intro-top.is-single { grid-template-columns: 1fr; }
         .ab-photos { max-width: 32rem; width: 100%; margin-inline: auto; }
         .ab-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.75rem 0; }
@@ -341,11 +361,12 @@
     $ours     = $ours     ?? [];
     $results  = $results  ?? [];
     $clients  = $clients  ?? [];
-    // Team: same source as the Home page (Crew members in the admin), so one edit updates both.
-    $team     = \App\Models\CrewMember::active()->ordered()->get()->map(fn ($m) => [
+    // Team: the 3 people marked "Show on the Home and About pages" in the admin. The full team is on the Team page.
+    $team     = \App\Models\CrewMember::homeList()->map(fn ($m) => [
         'name'      => $m->name,
         'role'      => $m->role,
         'photo_url' => $m->photo_url,
+        'photo_style' => $m->photoStyle(),
     ])->all();
     $teamUrl  = $teamUrl  ?? null;
     $projectsUrl = $projectsUrl ?? null;
@@ -420,7 +441,7 @@
     {{-- Hero: a short banner with the breadcrumb and the page title --}}
     <section class="ab-hero {{ $heroPhoto ? 'has-image' : '' }}">
         @if ($heroPhoto)
-            <img class="ab-hero-bg" src="{{ $heroPhoto }}" alt="" style="{{ $site->imageStyle('about_image') }}">
+            <img class="ab-hero-bg" src="{{ $heroPhoto }}" {{ \App\Support\Img::attrs($heroPhoto) }} alt="" fetchpriority="high" decoding="async" style="{{ $site->imageStyle('about_image') }}">
         @endif
 
         <div class="container">
@@ -448,8 +469,12 @@
 
                 <div class="ab-media {{ $introMedia ? '' : 'ab-ph' }}" @unless ($introMedia) data-label="{{ __('Photo not uploaded yet') }}" @endunless data-reveal>
                     @if ($introMedia)
-                        <img src="{{ $introMedia }}" alt="" loading="lazy" style="{{ $site->imageStyle('about_image_4') }}">
+                        <img src="{{ $introMedia }}" {{ \App\Support\Img::attrs($introMedia) }} alt="" loading="lazy" decoding="async" style="{{ $site->imageStyle('about_image_4') }}">
                     @endif
+                </div>
+
+                <div class="btn-row ab-intro-btn-mobile" data-reveal>
+                    <a href="{{ $introUrl }}" class="btn btn-primary">{{ $introLabel }}</a>
                 </div>
             </div>
         </div>
@@ -462,7 +487,7 @@
                 <div class="ab-photos has-{{ $storyPhotos->count() }}" data-reveal>
                     @foreach ($storyPhotos as $field => $src)
                         <figure class="{{ $src ? '' : 'ab-ph' }}" @unless ($src) data-label="{{ __('Photo not uploaded yet') }}" @endunless>
-                            @if ($src)<img src="{{ $src }}" alt="" loading="lazy" style="{{ $site->imageStyle($field) }}">@endif
+                            @if ($src)<img src="{{ $src }}" {{ \App\Support\Img::attrs($src) }} alt="" loading="lazy" decoding="async" style="{{ $site->imageStyle($field) }}">@endif
                         </figure>
                     @endforeach
                 </div>
@@ -578,7 +603,7 @@
             <div class="ab-gallery {{ $galleryPhotos->isNotEmpty() && $galleryPhotos->count() < 4 ? 'is-few' : '' }}" data-reveal>
                 @forelse ($galleryPhotos as $photo)
                     <button type="button" class="ab-g-item" data-ab-photo data-src="{{ $photo->url() }}" data-alt="{{ $photo->alt }}" aria-label="{{ __('Enlarge photo') }}{{ $photo->alt ? ': '.$photo->alt : '' }}">
-                        <img src="{{ $photo->url() }}" alt="{{ $photo->alt }}" loading="lazy" decoding="async">
+                        <img src="{{ $photo->url() }}" {{ \App\Support\Img::attrs($photo->url()) }} alt="{{ $photo->alt }}" loading="lazy" decoding="async" fetchpriority="low">
                     </button>
                 @empty
                     @for ($i = 0; $i < 4; $i++)
@@ -618,7 +643,7 @@
                             <span class="crew-mark" aria-hidden="true">{{ $brand }}</span>
                             <div class="crew-photo">
                                 @if ($photo = $p['photo_url'] ?? null)
-                                    <img src="{{ $photo }}" alt="{{ $p['name'] }}" loading="lazy">
+                                    <img src="{{ $photo }}" {{ \App\Support\Img::attrs($photo) }} alt="{{ $p['name'] }}" loading="lazy" decoding="async" style="{{ $p['photo_style'] ?? '' }}">
                                 @else
                                     <span aria-hidden="true">{{ collect(explode(' ', $p['name']))->map(fn ($w) => mb_substr($w, 0, 1))->take(2)->implode('') }}</span>
                                 @endif
@@ -645,7 +670,7 @@
             <div class="ab-client-row">
                 @foreach ($clients as [$cn, $cf])
                     @if ($cf)
-                        <img src="{{ $cf }}" alt="{{ $cn }}" loading="lazy">
+                        <img src="{{ $cf }}" {{ \App\Support\Img::attrs($cf) }} alt="{{ $cn }}" loading="lazy" decoding="async">
                     @else
                         <span>{{ $cn }}</span>
                     @endif

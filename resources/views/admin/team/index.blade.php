@@ -59,8 +59,17 @@
         .tl-status.is-ok { color: #1d7a55; }
         .tl-status.is-error { color: var(--color-danger); }
 
+        /* Divisions */
+        .dv-add { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 1rem 1.5rem; border-bottom: 1px solid var(--color-border); }
+        .dv-add .pa-input { flex: 1 1 14rem; }
+        .dv-rename { display: flex; flex: 1 1 14rem; flex-wrap: wrap; gap: 0.5rem; margin: 0; min-width: 0; }
+        .dv-rename .pa-input { flex: 1 1 10rem; }
+        .dv-count { font-size: var(--fs-small); color: var(--color-muted); white-space: nowrap; }
+        .dv-error { margin: 0; padding: 0.5rem 1.5rem 0; font-size: var(--fs-small); color: var(--color-danger); }
+        .tl-div { color: var(--color-primary); font-weight: 600; }
+
         @media (max-width: 760px) {
-            .pa-card-head, .tl-item, .tl-status { padding-inline: 1rem; }
+            .pa-card-head, .tl-item, .tl-status, .dv-add { padding-inline: 1rem; }
             .pa-hero { grid-template-columns: 1fr; padding-inline: 1rem; }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -129,6 +138,55 @@
             <form id="hero-remove" method="POST" action="{{ route('admin.team.hero.destroy') }}" hidden>@csrf @method('DELETE')</form>
         </section>
 
+        {{-- Divisions of the team --}}
+        <section class="pa-card">
+            <div class="pa-card-head">
+                <h3>Divisions</h3>
+                <p>Group the people on the Team page, for example Animation or Production. Drag the handle to change the order.</p>
+            </div>
+
+            <form method="POST" action="{{ route('admin.team.divisions.store') }}" class="dv-add">
+                @csrf
+                <input type="text" name="name" class="pa-input" placeholder="New division name" maxlength="120" required aria-label="New division name" value="{{ old('name') }}">
+                <button type="submit" class="btn btn-primary btn-sm">Add division</button>
+            </form>
+            @if ($errors->division->has('name'))<p class="dv-error" role="alert">{{ $errors->division->first('name') }}</p>@endif
+
+            @if ($divisions->isEmpty())
+                <p class="tl-empty">No divisions yet. Add one above, then choose it when you edit a person.</p>
+            @else
+                <ul class="tl" data-sortable data-url="{{ route('admin.team.divisions.order') }}" data-token="{{ csrf_token() }}">
+                    @foreach ($divisions as $division)
+                        <li class="tl-item" data-item data-id="{{ $division->id }}">
+                            <button type="button" class="tl-handle" data-handle
+                                    aria-label="Move {{ $division->name }}. Drag it, or press the Up and Down arrow keys.">
+                                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>
+                            </button>
+
+                            <form method="POST" action="{{ route('admin.team.divisions.update', $division) }}" class="dv-rename">
+                                @csrf
+                                @method('PUT')
+                                <input type="text" name="name" class="pa-input" value="{{ $division->name }}" maxlength="120" required aria-label="Division name">
+                                <button type="submit" class="btn btn-outline btn-sm">Save name</button>
+                            </form>
+
+                            <span class="dv-count">{{ $division->members_count }} {{ \Illuminate\Support\Str::plural('person', $division->members_count) }}</span>
+
+                            <div class="tl-actions">
+                                <form method="POST" action="{{ route('admin.team.divisions.destroy', $division) }}"
+                                      onsubmit="return confirm({{ \Illuminate\Support\Js::from('Delete the division '.$division->name.'? The people in it stay, but have no division.') }})">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+                <p class="tl-status" data-order-status role="status" aria-live="polite">Order is saved when you drop a division in a new place.</p>
+            @endif
+        </section>
+
         <section class="pa-card">
             <div class="pa-card-head">
                 <h3>All team members</h3>
@@ -156,7 +214,7 @@
 
                             <div class="tl-main">
                                 <p class="tl-name">{{ $item->name }}</p>
-                                <p class="tl-role">{{ $item->role }}</p>
+                                <p class="tl-role">{{ $item->role }}@if ($item->division) &middot; <span class="tl-div">{{ $item->division->name }}</span>@endif @if ($item->is_featured) &middot; Home and About @endif</p>
                             </div>
 
                             <span class="tl-pill {{ $item->is_active ? 'is-live' : '' }}">{{ $item->is_active ? 'Shown' : 'Hidden' }}</span>
@@ -260,9 +318,8 @@
     <script>
         // Order: drag the handle up or down (mouse or touch), or focus it and press the arrow keys. The new order is saved right away.
         document.addEventListener('DOMContentLoaded', function () {
-            var list = document.querySelector('[data-sortable]');
-            if (!list) { return; }
-            var status = document.querySelector('[data-order-status]');
+            document.querySelectorAll('[data-sortable]').forEach(function (list) {
+            var status = list.closest('section').querySelector('[data-order-status]');
             var saveTimer = null;
 
             function say(text, kind) {
@@ -338,6 +395,7 @@
                 handle.focus();
                 e.preventDefault();
                 save();
+            });
             });
         });
     </script>

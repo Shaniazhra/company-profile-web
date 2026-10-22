@@ -9,8 +9,8 @@
     $instagramIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg>';
     $linkedinIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>';
 
-    $instagramUrl = 'https://instagram.com/dream_ratio';
-    $linkedinUrl  = 'https://www.linkedin.com/search/results/all/?keywords=Dream%20Ratio';
+    $instagramUrl = 'https://www.instagram.com/dream_ratio/';
+    $linkedinUrl  = 'https://www.linkedin.com/company/dream-ratio/';
 
     // Photo for the contact band. Best: a cut-out PNG with a transparent background at
     // public/images/footer/contact.png (or .webp/.jpg). Otherwise the hero image is used.
@@ -24,8 +24,6 @@
     }
     $ctaImg = $ctaCutout ?: (!empty($site->hero_image) ? asset('storage/'.$site->hero_image) : null);
 @endphp
-
-@vite(['resources/css/theme.css'])
 
 @once
 <style>
@@ -152,7 +150,7 @@
     <section class="sf-top" id="contact" aria-labelledby="sf-cta-title">
         @if ($ctaImg)
             <div class="sf-visual {{ $ctaCutout ? 'sf-visual--cutout' : '' }}" aria-hidden="true">
-                <img src="{{ $ctaImg }}" alt="" loading="lazy">
+                <img src="{{ $ctaImg }}" {{ \App\Support\Img::attrs($ctaImg) }} alt="" loading="lazy" decoding="async">
             </div>
         @endif
 

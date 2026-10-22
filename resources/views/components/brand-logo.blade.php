@@ -27,7 +27,8 @@
 
 <span {{ $attributes->class(['brand-logo', 'brand-logo--'.$size]) }}>
     @if ($logo)
-        <img class="brand-logo-img" src="{{ $logo }}" alt="{{ $name ? '' : $brand }}">
+        {{-- width and height let the browser reserve the space, so the bar does not jump when the logo appears. --}}
+        <img class="brand-logo-img" src="{{ $logo }}" {{ \App\Support\Img::attrs($logo) }} alt="{{ $name ? '' : $brand }}" decoding="async">
     @endif
 
     @if ($name || ! $logo)
